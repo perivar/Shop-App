@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Image, Text, StyleSheet, Button, FlatList, TouchableOpacity, Platform, TouchableNativeFeedback, ImageBackground } from 'react-native';
+import { View, Image, Text, StyleSheet, Button, FlatList, TouchableOpacity, Platform, TouchableNativeFeedback, ImageBackground, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useDispatch } from 'react-redux'
@@ -7,7 +7,25 @@ import { removeListing } from '../store/actions/products'
 import { addListing } from '../store/actions/products'
 
 const YourProduct = props => {
+
+  // const deleteHandler = () => {
+  //   Alert.alert(
+  //     props.name,
+  //     'Are your sure you want to delete ' + props.name + '?',
+  //     [
+  //       {text: 'Yes', style: 'destructive' ,onPress: () => {
+  //         const productId = props.onDeleteProduct();
+  //         let objReturn = removeListing(productId);
+  //         dispatch(objReturn);
+  //       }},
+  //       {text: 'No', style: 'default'},
+  //     ],
+  //     { cancelable: false }
+  //   )
+  // }
+
   const dispatch = useDispatch()
+
   return(
     <View style={styles.container}>
       <View style={styles.itemContainer}>

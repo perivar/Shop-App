@@ -12,6 +12,7 @@
     "@react-native-community/masked-view": "0.1.5",
     "@react-navigation/native": "^5.0.0",
     "expo": "~36.0.0",
+    "expo-linear-gradient": "~8.0.0",
     "react": "~16.9.0",
     "react-dom": "~16.9.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
@@ -31,7 +32,7 @@
     "react-navigation-tabs": "^2.7.0",
     "react-redux": "^7.2.0",
     "redux": "^4.0.5",
-    "expo-linear-gradient": "~8.0.0"
+    "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
     "babel-preset-expo": "~8.0.0",

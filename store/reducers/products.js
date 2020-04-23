@@ -4,12 +4,16 @@ import { DELETE_CART } from '../actions/products'
 import { DEL_LISTING } from '../actions/products'
 import { NEW_LISTING } from '../actions/products'
 import { EDIT_LISTING } from '../actions/products'
+import { SET_PRODUCTS } from '../actions/products'
+import { PLACE_ORDER } from '../actions/products'
+import Product from '../../models/product'
 
 const initialState = {
   products: PRODUCTS,
   cart: [],
   counter: [],
   sumCart: 0,
+  orders: [],
 }
 
 const productReducer = (state = initialState, action) => {
@@ -58,8 +62,8 @@ const productReducer = (state = initialState, action) => {
       }
 
     case DEL_LISTING:
-      const yourProductToDelete = state.products.find(product => product.id === action.productId)
       const copyProducts = [...state.products]
+      const yourProductToDelete = copyProducts.find(product => product.id === action.productId)
       const index = copyProducts.findIndex(product => product.id === yourProductToDelete.id)
 
       copyProducts.splice(index, 1)
@@ -75,14 +79,38 @@ const productReducer = (state = initialState, action) => {
       updatedProduct.name = action.name
       updatedProduct.description = action.description
 
-      copyState.splice(productIndex, 1, updatedProduct)
+      copyState.splice(productIndex, 1, updatedProduct);
 
       return { ...state, products: copyState }
+
     case NEW_LISTING:
-      const newState = [...state.products]
-      const newElement = {id: action.productId, name: action.name, price: 500, description: action.description}
-      newState.push(newElement)
-      return { ...state, products: newState}
+      const currState = [...state.products]
+
+      const newProduct = new Product(
+      action.productId,
+      'u1',
+      'Alfred Johansen',
+      action.name,
+      action.url,
+      action.description,
+      action.price)
+      currState.push(newProduct)
+
+      return { ...state, products: currState}
+
+    case SET_PRODUCTS:
+      return {
+      products: action.products,
+      cart: [],
+      counter: [],
+      sumCart: 0,
+      orders: []
+    }
+    case PLACE_ORDER:
+      const productsToOrder = [...state.cart]
+      const orders = [...state.orders]
+      const updatedOrder = orders.concat(productsToOrder)
+      return { ...state, orders: updatedOrder, cart: [], sumCart: 0, counter: [] }
   }
   return state;
 }

@@ -1,9 +1,14 @@
-import React, { useState } from 'react'
-import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity, TextInput } from 'react-native';
-import { useSelector, useDispatch, useEffect, useCallback } from 'react-redux'
+import React, { useState, useCallback, useEffect} from 'react'
+import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity, ActivityIndicator, Alert, TextInput, KeyboardAvoidingView, ScrollView} from 'react-native';
+import { useSelector, useDispatch } from 'react-redux'
 import { editListing } from '../store/actions/products'
+import Input from '../components/Input'
 
 const EditListingsScreen = props => {
+
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState()
+
   const name = props.navigation.getParam('name')
   const price = props.navigation.getParam('price')
   const productId = props.navigation.getParam('productId')
@@ -24,19 +29,41 @@ const EditListingsScreen = props => {
   const [descHolder, setDescHolder] = useState(productToEdit.description)
   const [locationHolder, setLocationHolder] = useState(location)
 
-  const submitChanges = () => {
-    let objectReturn = editListing(productToEdit.id, nameHolder, descHolder)
-    dispatch(objectReturn)
-    props.navigation.popToTop();
+  useEffect(() => {
+    if(error){
+      Alert.alert("An error occured", error, [{text: 'Okay'}])
+    }
+  }, [error])
+
+  const submitHandler = useCallback(async () => {
+    setIsLoading(true)
+    setError(null)
+    try {
+      let objectReturn = await editListing(productToEdit.id, nameHolder, descHolder)
+      await dispatch(objectReturn)
+      setIsLoading(false)
+      props.navigation.popToTop();
+    } catch (err) {
+      setError(err.message)
+    }
+  }, [dispatch, nameHolder, locationHolder, priceHolder, descHolder])
+
+  if (isLoading) {
+    <View style={{justifyContent: 'center', alignItems: 'center'}}>
+      <ActivityIndicator size="large"/>
+    </View>
   }
 
   return (
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+    >
     <View style={styles.container}>
       <View style={styles.card}>
         <Text style={styles.title}>
           Your Product!
         </Text>
-
+        <ScrollView>
         <View style={styles.nameWrapper}>
           <Text style={styles.text}>
             Title
@@ -81,13 +108,14 @@ const EditListingsScreen = props => {
         </View>
 
         <View style={styles.pricewrapper}>
-          <TouchableOpacity style={styles.submitWrapper} onPress={submitChanges}>
+          <TouchableOpacity style={styles.submitWrapper} onPress={submitHandler}>
             <Text style={styles.buttonText}>Save Changes</Text>
           </TouchableOpacity>
         </View>
-
+      </ScrollView>
       </View>
     </View>
+  </KeyboardAvoidingView>
   )
 }
 
@@ -135,7 +163,7 @@ const styles = StyleSheet.create({
     width: '90%',
     overflow: 'hidden',
     marginBottom: 15,
-    flex:1
+    // flex:1
   },
   locationWrapper:{
     // backgroundColor: 'yellow',
@@ -149,6 +177,8 @@ const styles = StyleSheet.create({
     color: '#666666'
   },
   pricewrapper:{
+    flexDirection: 'row',
+    marginTop: 20
   },
   priceTitle:{
     color: '#333333'

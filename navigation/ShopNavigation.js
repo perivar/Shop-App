@@ -10,6 +10,7 @@ import SettingsScreen from '../screens/SettingsScreen'
 import EditListingsScreen from '../screens/EditListingsScreen'
 import OrdersScreen from '../screens/OrdersScreen'
 import NewListingsScreen from '../screens/NewListingsScreen'
+import PlacedOrderScreen from '../screens/PlacedOrderScreen'
 
 import { createStackNavigator } from 'react-navigation-stack';
 import { createAppContainer } from 'react-navigation';
@@ -30,7 +31,7 @@ const ShopNavigator = createStackNavigator({
   },
   Settings: {
     screen: SettingsScreen
-  }
+  },
 });
 
 const ProfileNavigator = createStackNavigator({
@@ -51,6 +52,9 @@ const OrdersNavigator = createStackNavigator({
   },
   Settings: {
     screen: SettingsScreen
+  },
+  PlacedOrders: {
+    screen: PlacedOrderScreen
   }
 })
 

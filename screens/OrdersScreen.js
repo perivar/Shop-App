@@ -1,20 +1,28 @@
-import React, { useState } from 'react'
-import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity } from 'react-native';
+import React, { useState, useCallback } from 'react'
+import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity, ActivityIndicator} from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 import HeaderButton from '../components/HeaderButton'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch} from 'react-redux'
 import CartItem from '../components/CartItem'
+import { placeOrder } from '../store/actions/products'
 
 const OrderScreen = props => {
+
+  const [isLoading, setIsLoading] = useState(false)
+
+  const dispatch = useDispatch();
+
   const productsInCart = useSelector(state => state.allProducts.cart);
+
   const numberOfProducts = useSelector(state => state.allProducts.counter)
+
   const sumCart = useSelector(state => state.allProducts.sumCart);
   var rounded = Math.round(sumCart * 10) / 10
 
   let totalProducts = 0;
 
   for(let x = 0; x < numberOfProducts.length; x++){
-    totalProducts += numberOfProducts[x].number
+    totalProducts += Math.round(numberOfProducts[x].number * 10) / 10
   }
 
   const renderCart = itemData => {
@@ -30,6 +38,14 @@ const OrderScreen = props => {
           />
     )
   }
+
+  const orderHandler = useCallback(async () => {
+    const prodNames = productsInCart.map(product => {return product})
+    setIsLoading(true)
+    let objectReturn = await placeOrder(prodNames, rounded)
+    await dispatch(objectReturn)
+    setIsLoading(false)
+  }, [dispatch, productsInCart])
 
   return (
     <View style={styles.priceSummary}>
@@ -51,6 +67,9 @@ const OrderScreen = props => {
         </View>
       </View>
       <FlatList style={styles.list} numColumns={1} data={productsInCart} renderItem={renderCart} keyExtractor={(item, index) => item.id}/>
+        <TouchableOpacity style={styles.orderButton} onPress={orderHandler}>
+        {isLoading ? <ActivityIndicator size="small" color="#fff"/> : <Text style={styles.buttonText}>Place Order</Text> }
+        </TouchableOpacity>
     </View>
     )
 }
@@ -60,8 +79,8 @@ OrderScreen.navigationOptions = (data) => {
     headerTitle: 'Cart',
     headerRight: (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
-        <Item title="settings" iconName="ios-settings" onPress={() => {
-          data.navigation.navigate('Settings')
+        <Item title="settings" iconName="ios-rocket" onPress={() => {
+          data.navigation.navigate('PlacedOrders')
         }} />
       </HeaderButtons>
     )
@@ -71,7 +90,7 @@ OrderScreen.navigationOptions = (data) => {
 const styles = StyleSheet.create({
   topInfo:{
     flexDirection: 'row',
-    backgroundColor: '#d8eff9',
+    backgroundColor: '#B2DBBF',
   },
   priceSummary:{
     flex:1
@@ -111,6 +130,40 @@ const styles = StyleSheet.create({
     color: '#254053',
     paddingLeft: 20
   },
+  buttonWrap:{
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginVertical: 10,
+  },
+  orderButton:{
+    justifyContent: 'center',
+    width: '70%',
+    bottom: 10,
+    right: 50,
+    position: 'absolute',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderRadius: 30,
+    paddingBottom: 12,
+    paddingTop: 12,
+    paddingLeft: 16,
+    paddingRight: 16,
+    borderColor: '#FF1654',
+    backgroundColor: '#FF1654',
+    shadowColor: "#000",
+    shadowOffset: {
+    	width: 0,
+    	height: 5,
+    },
+    shadowOpacity: 0.36,
+    shadowRadius: 6.68,
+    elevation: 2,
+  },
+  buttonText:{
+    fontSize: 16,
+    color: 'white',
+    fontWeight: 'bold'
+  }
 })
 
 export default OrderScreen;

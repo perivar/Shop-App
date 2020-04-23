@@ -4,6 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useDispatch } from 'react-redux'
 import { addToCart } from '../store/actions/products'
+import Card from '../components/Card'
 
 const ProductDetailScreen = props => {
   const dispatch = useDispatch();
@@ -17,10 +18,10 @@ const ProductDetailScreen = props => {
   const seller = props.navigation.getParam('seller')
   const profileImageUrl = 'https://res.cloudinary.com/muhammederdem/image/upload/v1537638518/Ba%C5%9Fl%C4%B1ks%C4%B1z-1.jpg';
   const location = 'Lillehammer, Norway'
-  
+
   return (
   <View style={styles.container}>
-    <View style={styles.productCard}>
+    <Card style={styles.productCard}>
       <View style={styles.textwrap}>
         <Text style={styles.title}>
           {name}
@@ -53,7 +54,6 @@ const ProductDetailScreen = props => {
         </View>
       </View>
 
-
       <View style={styles.bottomOfCard}>
         <View style={styles.left}>
           <Text style={styles.price}>
@@ -69,7 +69,7 @@ const ProductDetailScreen = props => {
             </TouchableOpacity>
           </View>
       </View>
-    </View>
+    </Card>
   </View>
   )
 }
@@ -82,21 +82,12 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   productCard:{
-    backgroundColor: '#f5f5f5',
+    flex:0.9,
     width:'90%',
-    height: '85%',
+    height: '95%',
     paddingTop: 25,
     paddingBottom: 25,
     borderRadius: 5,
-    overflow: 'hidden',
-    shadowColor: "#000",
-    shadowOffset: {
-    	width: 0,
-    	height: 5,
-    },
-    shadowOpacity: 0.36,
-    shadowRadius: 6.68,
-    elevation: 11,
   },
   textwrap:{
     flexDirection: 'column',
@@ -129,7 +120,8 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   middleSection:{
-    height: 100,
+    flex:1,
+    height: '100%',
     flexDirection: 'row',
   },
   profileWrapper:{
@@ -178,7 +170,6 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   bottomOfCard:{
-    flex:1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
