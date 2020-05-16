@@ -6,6 +6,7 @@ import { fetchProducts } from '../store/actions/products'
 
 const ProductList = props => {
   const [isLoading, setIsLoading] = useState(false)
+  const [isRefreshing, setIsRefreshing] = useState(false)
   const [error, setError] = useState()
 
   const allProducts = useSelector(state => state.allProducts.products);
@@ -13,14 +14,14 @@ const ProductList = props => {
   const dispatch = useDispatch()
 
   const loadProducts = useCallback(async () => {
+    setIsRefreshing(true)
     setError(null)
-    setIsLoading(true)
     try {
       await dispatch(fetchProducts())
     } catch (err) {
       setError(err.message)
     }
-    setIsLoading(false)
+    setIsRefreshing(false)
   }, [dispatch, setIsLoading, setError])
 
   useEffect(() => {
@@ -32,7 +33,10 @@ const ProductList = props => {
   }, [loadProducts])
 
   useEffect(() => {
-    loadProducts();
+    setIsLoading(true)
+    loadProducts().then(() => {
+      setIsLoading(false)
+    })
   }, [dispatch])
 
   const renderProducts = (itemData) => {
@@ -90,7 +94,7 @@ const ProductList = props => {
 
   return(
     <View style={styles.screen}>
-      <FlatList numColumns={2} data={allProducts} renderItem={renderProducts} keyExtractor={(item, index) => item.id}/>
+      <FlatList onRefresh={loadProducts} refreshing={isRefreshing} numColumns={2} data={allProducts} renderItem={renderProducts} keyExtractor={(item, index) => item.id}/>
     </View>
   )
 }

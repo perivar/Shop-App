@@ -1,5 +1,3 @@
-
-
 import React, { useState } from 'react'
 import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
@@ -9,12 +7,7 @@ import YourProduct from '../components/YourProduct'
 
 const OwnListing = props => {
   const product = useSelector(state => state.allProducts.products)
-  const userProducts = []
-  for(let x = 0; x < product.length; x++){
-    if(product[x].userId === 'u1'){
-      userProducts.push(product[x])
-    }
-  }
+  const userProducts = useSelector(state => state.allProducts.userProducts);
 
   const renderItems = itemData => {
     return(
@@ -41,6 +34,25 @@ const OwnListing = props => {
           return itemData.item.id
         }}
         />
+    )
+  }
+
+  if(userProducts.length === 0){
+    return(
+    <View style={styles.screen}>
+      <View style={styles.topInfo}>
+        <View style={styles.leftTop}>
+          <Text style={styles.summaryTitle}>
+            You have {userProducts.length} products for sale
+          </Text>
+        </View>
+      </View>
+      <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
+        <Text>
+          No products found
+        </Text>
+      </View>
+    </View>
     )
   }
 

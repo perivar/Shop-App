@@ -4,16 +4,17 @@ import 'react-native-gesture-handler';
 
 import HomeScreen from '../screens/HomeScreen'
 import ProductDetailScreen from '../screens/ProductDetailScreen'
-import CartScreen from '../screens/CartScreen'
 import OwnListingScreen from '../screens/OwnListingScreen'
 import SettingsScreen from '../screens/SettingsScreen'
 import EditListingsScreen from '../screens/EditListingsScreen'
 import OrdersScreen from '../screens/OrdersScreen'
 import NewListingsScreen from '../screens/NewListingsScreen'
 import PlacedOrderScreen from '../screens/PlacedOrderScreen'
+import AuthScreen from '../screens/AuthScreen'
+import StartUpScreen from '../screens/StartUpScreen'
 
 import { createStackNavigator } from 'react-navigation-stack';
-import { createAppContainer } from 'react-navigation';
+import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { Ionicons } from '@expo/vector-icons';
 import { createDrawerNavigator } from 'react-navigation-drawer';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
@@ -25,9 +26,6 @@ const ShopNavigator = createStackNavigator({
   },
   ProductScreen: {
     screen: ProductDetailScreen,
-  },
-  CartScreen: {
-    screen: CartScreen,
   },
   Settings: {
     screen: SettingsScreen
@@ -93,10 +91,20 @@ const tabScreenConfig = {
     // }
   }
 
-const bottomNavigator = createBottomTabNavigator(tabScreenConfig, {
+const BottomNavigator = createBottomTabNavigator(tabScreenConfig, {
   activeTintColor: '#8BE8CB',
   shifting: true,
 });
+
+const AuthNavigator = createStackNavigator({
+  Auth: AuthScreen
+})
+
+const MainNavigator = createSwitchNavigator({
+  StartUp: StartUpScreen,
+  Auth: AuthNavigator,
+  Shop: BottomNavigator
+})
 
 // const mainNavigator = createDrawerNavigator({
 //   ActivityFavs: {
@@ -113,5 +121,5 @@ const bottomNavigator = createBottomTabNavigator(tabScreenConfig, {
 //   }
 // })
 
-let Navigation = createAppContainer(bottomNavigator);
+let Navigation = createAppContainer(MainNavigator);
 export default () => <Navigation />

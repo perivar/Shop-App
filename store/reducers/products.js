@@ -5,15 +5,18 @@ import { DEL_LISTING } from '../actions/products'
 import { NEW_LISTING } from '../actions/products'
 import { EDIT_LISTING } from '../actions/products'
 import { SET_PRODUCTS } from '../actions/products'
+import { SET_ORDERS } from '../actions/products'
 import { PLACE_ORDER } from '../actions/products'
 import Product from '../../models/product'
+import Order from '../../models/order';
 
 const initialState = {
-  products: PRODUCTS,
+  products: [],
   cart: [],
   counter: [],
   sumCart: 0,
   orders: [],
+  userProducts: []
 }
 
 const productReducer = (state = initialState, action) => {
@@ -88,7 +91,7 @@ const productReducer = (state = initialState, action) => {
 
       const newProduct = new Product(
       action.productId,
-      'u1',
+      action.ownerId,
       'Alfred Johansen',
       action.name,
       action.url,
@@ -96,7 +99,7 @@ const productReducer = (state = initialState, action) => {
       action.price)
       currState.push(newProduct)
 
-      return { ...state, products: currState}
+      return { ...state, products: state.products.concat(newProduct), userProducts: state.userProducts.concat(newProduct)}
 
     case SET_PRODUCTS:
       return {
@@ -104,13 +107,32 @@ const productReducer = (state = initialState, action) => {
       cart: [],
       counter: [],
       sumCart: 0,
-      orders: []
+      orders: [],
+      userProducts: action.userProducts
     }
+
+    case SET_ORDERS:
+      return { ...state, orders: action.orders }
+
     case PLACE_ORDER:
-      const productsToOrder = [...state.cart]
-      const orders = [...state.orders]
-      const updatedOrder = orders.concat(productsToOrder)
-      return { ...state, orders: updatedOrder, cart: [], sumCart: 0, counter: [] }
+      const newOrder = new Order(
+              action.orderData.id,
+              action.orderData.items,
+              action.orderData.amount,
+              action.orderData.date
+            );
+            return {
+              ...state,
+              orders: state.orders.concat(newOrder),
+              cart: [],
+              sumCart: 0,
+              counter: []
+            };
+            // const productsToOrder = [...state.cart]
+            // const orders = [...state.orders]
+            // const updatedOrder = orders.concat(productsToOrder)
+            // return { ...state, orders: updatedOrder, cart: [], sumCart: 0, counter: [] }
+
   }
   return state;
 }
