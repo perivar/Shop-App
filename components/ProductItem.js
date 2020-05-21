@@ -13,12 +13,13 @@ const ProductItem = props => {
       <TouchableOpacity onPress={props.onSelectProduct} style={styles.touchableOp}>
       <View style={styles.imageWrap}>
         <ImageBackground source={{uri: props.url}} style={styles.bgImg}>
+          <Text numberOfLines={1} style={styles.price}>{props.price} NOK</Text>
         </ImageBackground>
       </View>
       <View style={styles.bottomOfCard}>
         <View style={styles.left}>
           <Text numberOfLines={1} style={styles.title}>{props.name}</Text>
-          <Text numberOfLines={1} style={styles.price}>{props.price} NOK</Text>
+          {/* <Text numberOfLines={1} style={styles.price}>{props.price} NOK</Text> */}
         </View>
 
         <View style={styles.right}>
@@ -27,7 +28,7 @@ const ProductItem = props => {
             let objectReturn = addToCart(productId);
             dispatch(objectReturn);
           }}>
-            <MaterialIcons name="add-shopping-cart" size={32} color="#254053"/>
+            {/* <MaterialIcons name="add-shopping-cart" size={32} color="#254053"/> */}
           </TouchableOpacity>
         </View>
       </View>
@@ -38,7 +39,7 @@ const ProductItem = props => {
 
 const styles = StyleSheet.create({
   productItem:{
-    height: 250,
+    height: 200,
     width:'45%',
     borderRadius: 10,
     margin: 10,
@@ -57,8 +58,7 @@ const styles = StyleSheet.create({
     flex:1,
   },
   imageWrap:{
-    height:170,
-    backgroundColor: '#FFFF',
+    height:140,
     flexDirection: 'row',
     shadowColor: "#000",
     shadowOffset: {
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',
-    backgroundColor: '#d8eff9',
+    backgroundColor: '#C9E6E2',
     borderLeftWidth: 0.5,
     borderColor: 'rgba(0,0,0,0.1)'
   },
@@ -102,12 +102,16 @@ const styles = StyleSheet.create({
     paddingRight:5
   },
   title:{
-    fontSize: 20,
-    fontWeight: '900'
+    fontSize: 16,
+    fontWeight: '700'
   },
   price:{
     fontSize: 14,
-    fontWeight: '300'
+    fontWeight: '300',
+    alignSelf: 'flex-start',
+    color: "white",
+    fontWeight: 'bold',
+    backgroundColor: 'rgba(52, 52, 52, 0.8)'
   },
   bgImg:{
   width: '100%',

@@ -1,8 +1,23 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, StyleSheet, Button, FlatList, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, Button, FlatList, ActivityIndicator, SafeAreaView, Platform, StatusBar, Dimensions} from 'react-native';
 import { useSelector, useDispatch } from 'react-redux'
 import ProductItem from './ProductItem'
 import { fetchProducts } from '../store/actions/products'
+import { useFonts } from '@use-expo/font';
+import Animated, { Easing } from 'react-native-reanimated';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import * as Animatable from 'react-native-animatable';
+
+const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
+const headerHeight = Platform.OS == 'ios' ? 120 : 70+StatusBar;
+const scrollY = new Animated.Value(0)
+const headerY = Animated.interpolate(scrollY, {
+  inputRange:[0, headerHeight],
+  outputRange:[0,-headerHeight]
+})
+
+const {width,height} = Dimensions.get('window')
+const height_logo = height * 0.4 * 0.4
 
 const ProductList = props => {
   const [isLoading, setIsLoading] = useState(false)
@@ -24,13 +39,13 @@ const ProductList = props => {
     setIsRefreshing(false)
   }, [dispatch, setIsLoading, setError])
 
-  useEffect(() => {
-    const willFocusSub = props.navigation.navigation.addListener('willFocus', loadProducts)
-
-    return () => {
-      willFocusSub.remove();
-    }
-  }, [loadProducts])
+  // useEffect(() => {
+  //   const willFocusSub = props.navigation.navigation.addListener('willFocus', loadProducts)
+  //
+  //   return () => {
+  //     willFocusSub.remove();
+  //   }
+  // }, [loadProducts])
 
   useEffect(() => {
     setIsLoading(true)
@@ -94,7 +109,50 @@ const ProductList = props => {
 
   return(
     <View style={styles.screen}>
-      <FlatList onRefresh={loadProducts} refreshing={isRefreshing} numColumns={2} data={allProducts} renderItem={renderProducts} keyExtractor={(item, index) => item.id}/>
+        <View>
+          <Animated.View
+            style={{
+              position: 'absolute',
+              flexDirection: 'row',
+              left: 0,
+              right: 0,
+              top: 0,
+              height: headerHeight,
+              backgroundColor: '#c6f1e7',
+              zIndex: 1000,
+              elevation:1000,
+              transform: [{ translateY: headerY }],
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingTop: 30,
+            }}
+           >
+             <View style={styles.header}>
+               <Animatable.Image
+                 source={require('../assets/logo.png')}
+                 style={styles.logo}
+                 resizeMode={"stretch"}
+                 animation="fadeInDown"
+                 duration={600}
+               />
+             </View>
+             <MaterialIcons onPress={() => {console.log(props.navigation.navigation.navigate("Settings"))}} name="settings" size={24} style={{position: 'absolute', right: 20}}/>
+           </Animated.View>
+          <AnimatedFlatList
+            contentContainerStyle={{ paddingTop: headerHeight + height_logo / 3 }}
+            scrollEventThrottle={16}
+            onScroll={Animated.event([
+              {
+              nativeEvent: { contentOffset: { y: scrollY }}
+              }
+          ],{ useNativeDriver: true })}
+            onRefresh={loadProducts}
+            refreshing={isRefreshing}
+            numColumns={2} data={allProducts}
+            renderItem={renderProducts}
+            keyExtractor={(item, index) => item.id}
+          />
+        </View>
     </View>
   )
 }
@@ -104,6 +162,22 @@ const styles = StyleSheet.create({
     flex:1,
     flexDirection: 'column',
     justifyContent: 'center',
+    backgroundColor: '#D6A5AB'
+  },
+  header:{
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: height / 5,
+    shadowColor: "#8aa8a1",
+    shadowRadius: 5,
+    shadowOffset: {height:5},
+    shadowOpacity: 0.1
+  },
+  logo:{
+    top:height / 6,
+    width: height_logo,
+    height: height_logo,
+    borderRadius: height_logo / 2,
   },
 })
 

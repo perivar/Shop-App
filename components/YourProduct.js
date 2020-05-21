@@ -29,7 +29,6 @@ const YourProduct = props => {
   return(
     <View style={styles.container}>
       <View style={styles.itemContainer}>
-
         <View style={styles.top}>
           <View style={styles.pictureWrap}>
             <Image source={{uri: props.img}} style={styles.productImg}/>
@@ -81,7 +80,7 @@ const styles = StyleSheet.create({
   },
   itemContainer:{
     flexDirection: 'column',
-    backgroundColor: '#C0D3C7',
+    backgroundColor: '#78D8D2',
     height: 200,
     paddingTop: 23,
     paddingHorizontal: 23,

@@ -12,6 +12,11 @@ import NewListingsScreen from '../screens/NewListingsScreen'
 import PlacedOrderScreen from '../screens/PlacedOrderScreen'
 import AuthScreen from '../screens/AuthScreen'
 import StartUpScreen from '../screens/StartUpScreen'
+import ChatScreen from '../screens/ChatScreen'
+import StartScreen from '../screens/StartScreen'
+import LogInScreen from '../screens/LogInScreen'
+import SignUpScreen from '../screens/SignUpScreen'
+import AddButton from '../components/AddButton'
 
 import { createStackNavigator } from 'react-navigation-stack';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
@@ -29,6 +34,12 @@ const ShopNavigator = createStackNavigator({
   },
   Settings: {
     screen: SettingsScreen
+  },
+});
+
+const ChatNav = createStackNavigator({
+  Chat: {
+    screen: ChatScreen
   },
 });
 
@@ -62,7 +73,8 @@ const tabScreenConfig = {
       navigationOptions:{
         tabBarIcon: () => {
             return <Ionicons name="ios-list" size={24}/>
-          }
+          },
+          tabBarColor: '#4baea0'
       }
     },
     Yours: {
@@ -71,6 +83,16 @@ const tabScreenConfig = {
         tabBarIcon: () => {
           return <Ionicons name="ios-person" size={24}/>
         },
+        tabBarColor: '#4baea0'
+      }
+    },
+    Add: {
+      screen: () => null,
+      navigationOptions:{
+        tabBarIcon: <AddButton />,
+        labeled: false,
+        // shifting: false,
+        tabBarColor: '#4baea0'
       }
     },
     Cart:{
@@ -78,26 +100,33 @@ const tabScreenConfig = {
       navigationOptions:{
         tabBarIcon: () => {
           return <Ionicons name="ios-cart" size={24} />
-        }
+        },
+        tabBarColor: '#4baea0'
       }
     },
-    // Settings:{
-    //   screen: SettingsNavigator,
-    //   navigationOptions:{
-    //     tabBarIcon: () => {
-    //       return <Ionicons name="ios-settings" size={24} />
-    //     }
-    //   }
-    // }
+    Chat:{
+      screen: ChatNav,
+      navigationOptions:{
+        tabBarIcon: () => {
+          return <Ionicons name="ios-chatbubbles" size={24} />
+        },
+        tabBarColor: '#4baea0'
+      }
+    },
   }
 
-const BottomNavigator = createBottomTabNavigator(tabScreenConfig, {
-  activeTintColor: '#8BE8CB',
-  shifting: true,
+const BottomNavigator = createMaterialBottomTabNavigator(tabScreenConfig, {
+  initialRouteName: 'Market',
+      activeColor: '#f0edf6',
+      inactiveColor: '#3e2465',
+      barStyle: { backgroundColor: '#2a9d8f' },
+      shifting: true
 });
 
 const AuthNavigator = createStackNavigator({
-  Auth: AuthScreen
+  start: StartScreen,
+  login: LogInScreen,
+  signup: SignUpScreen
 })
 
 const MainNavigator = createSwitchNavigator({

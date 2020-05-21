@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react'
-import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity, ActivityIndicator} from 'react-native';
+import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity, ActivityIndicator, SafeAreaView} from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 import HeaderButton from '../components/HeaderButton'
 import { useSelector, useDispatch} from 'react-redux'
@@ -49,7 +49,7 @@ const OrderScreen = props => {
 
   return (
     <View style={styles.priceSummary}>
-      <View style={styles.topInfo}>
+      <SafeAreaView style={styles.topInfo}>
         <View style={styles.leftTop}>
           <Text style={styles.summaryTitle}>
             Your Summary
@@ -65,7 +65,7 @@ const OrderScreen = props => {
             </Text>
           </View>
         </View>
-      </View>
+      </SafeAreaView>
       <FlatList style={styles.list} numColumns={1} data={productsInCart} renderItem={renderCart} keyExtractor={(item, index) => item.id}/>
         <TouchableOpacity style={styles.orderButton} onPress={orderHandler}>
         {isLoading ? <ActivityIndicator size="small" color="#fff"/> : <Text style={styles.buttonText}>Place Order</Text> }
