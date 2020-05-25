@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, StyleSheet, Button, FlatList, ActivityIndicator, SafeAreaView, Platform, StatusBar, Dimensions} from 'react-native';
+import { View, Text, StyleSheet, AsyncStorage, Button, FlatList, ActivityIndicator, SafeAreaView, Platform, StatusBar, Dimensions} from 'react-native';
 import { useSelector, useDispatch } from 'react-redux'
 import ProductItem from './ProductItem'
 import { fetchProducts } from '../store/actions/products'
@@ -23,6 +23,8 @@ const ProductList = props => {
   const [isLoading, setIsLoading] = useState(false)
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [error, setError] = useState()
+  const [username, setUsername] = useState(null)
+  const [animationState, setAnimationState] = useState("bounceIn")
 
   const allProducts = useSelector(state => state.allProducts.products);
 
@@ -33,6 +35,11 @@ const ProductList = props => {
     setError(null)
     try {
       await dispatch(fetchProducts())
+      const value = await AsyncStorage.getItem('userData');
+        if (value !== null) {
+          const response = await JSON.parse(value)
+          setUsername(response.displayName)
+        }
     } catch (err) {
       setError(err.message)
     }
@@ -61,6 +68,7 @@ const ProductList = props => {
         price={itemData.item.price}
         url={itemData.item.url}
         description={itemData.item.description}
+        location={itemData.item.location}
         onAddToCart = {() => {
           return itemData.item.id;
         }}
@@ -74,7 +82,8 @@ const ProductList = props => {
               user: itemData.item.userId,
               url: itemData.item.url,
               seller: itemData.item.seller,
-              description: itemData.item.description
+              description: itemData.item.description,
+              location: itemData.item.location
             }
           });
         }}
@@ -124,19 +133,31 @@ const ProductList = props => {
               transform: [{ translateY: headerY }],
               alignItems: 'center',
               justifyContent: 'center',
-              paddingTop: 30,
             }}
            >
+             <Animatable.Text
+               animation={animationState}
+               duration={900}
+               onAnimationEnd={() => {
+                 setTimeout(() => {
+                   setAnimationState("bounceOut")
+                 }, 2000)
+               }}
+               style={styles.welcomeText}>
+             Welcome {username}!
+            </Animatable.Text>
              <View style={styles.header}>
+
                <Animatable.Image
                  source={require('../assets/logo.png')}
                  style={styles.logo}
                  resizeMode={"stretch"}
                  animation="fadeInDown"
                  duration={600}
+                 delay={4000}
                />
              </View>
-             <MaterialIcons onPress={() => {console.log(props.navigation.navigation.navigate("Settings"))}} name="settings" size={24} style={{position: 'absolute', right: 20}}/>
+             <MaterialIcons onPress={() => {console.log(props.navigation.navigation.navigate("Settings"))}} name="settings" size={24} style={{position: 'absolute', top: 53 ,right: 13}}/>
            </Animated.View>
           <AnimatedFlatList
             contentContainerStyle={{ paddingTop: headerHeight + height_logo / 3 }}
@@ -148,7 +169,8 @@ const ProductList = props => {
           ],{ useNativeDriver: true })}
             onRefresh={loadProducts}
             refreshing={isRefreshing}
-            numColumns={2} data={allProducts}
+            numColumns={2}
+            data={allProducts}
             renderItem={renderProducts}
             keyExtractor={(item, index) => item.id}
           />
@@ -161,17 +183,18 @@ const styles = StyleSheet.create({
   screen:{
     flex:1,
     flexDirection: 'column',
-    justifyContent: 'center',
-    backgroundColor: '#D6A5AB'
+    alignItems: 'center',
+    backgroundColor: '#F5E9EA',
   },
   header:{
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: height / 5,
+    marginBottom: headerHeight + height_logo / 3,
     shadowColor: "#8aa8a1",
     shadowRadius: 5,
     shadowOffset: {height:5},
-    shadowOpacity: 0.1
+    shadowOpacity: 0.2,
+    paddingTop: 30
   },
   logo:{
     top:height / 6,
@@ -179,6 +202,18 @@ const styles = StyleSheet.create({
     height: height_logo,
     borderRadius: height_logo / 2,
   },
+  welcomeText:{
+    flex:1,
+    textAlign: 'center',
+    width: '100%',
+    fontSize: width / 20,
+    fontWeight: '600',
+    opacity: 0.8,
+    color: '#254053',
+    top: 70,
+    left: 0,
+    position: 'absolute'
+  }
 })
 
 export default ProductList;

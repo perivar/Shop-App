@@ -1,33 +1,37 @@
 import React from 'react'
-import { View, Image, Text, StyleSheet, Button, FlatList, TouchableOpacity, Platform, TouchableNativeFeedback, ImageBackground, Alert } from 'react-native';
+import { View, Image, Text, StyleSheet, Dimensions, Button, FlatList, TouchableOpacity, Platform, TouchableNativeFeedback, ImageBackground, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useDispatch } from 'react-redux'
 import { removeListing } from '../store/actions/products'
 import { addListing } from '../store/actions/products'
+import * as Animatable from 'react-native-animatable';
+
+const {width,height} = Dimensions.get('window')
 
 const YourProduct = props => {
-
-  // const deleteHandler = () => {
-  //   Alert.alert(
-  //     props.name,
-  //     'Are your sure you want to delete ' + props.name + '?',
-  //     [
-  //       {text: 'Yes', style: 'destructive' ,onPress: () => {
-  //         const productId = props.onDeleteProduct();
-  //         let objReturn = removeListing(productId);
-  //         dispatch(objReturn);
-  //       }},
-  //       {text: 'No', style: 'default'},
-  //     ],
-  //     { cancelable: false }
-  //   )
-  // }
+  const deleteHandler = (productToDelete) => {
+    Alert.alert(
+      props.name,
+      'Are your sure you want to delete ' + props.name + '?',
+      [
+        {text: 'Yes', style: 'destructive' ,onPress: () => {
+          let objReturn = removeListing(productToDelete);
+          dispatch(objReturn);
+        }},
+        {text: 'No', style: 'default'},
+      ],
+      { cancelable: true }
+    )
+  }
 
   const dispatch = useDispatch()
 
   return(
-    <View style={styles.container}>
+    <Animatable.View
+      animation="fadeInRight"
+      duration={800}
+      style={styles.container}>
       <View style={styles.itemContainer}>
         <View style={styles.top}>
           <View style={styles.pictureWrap}>
@@ -46,11 +50,9 @@ const YourProduct = props => {
         </View>
 
         <View style={styles.bottom}>
-
             <TouchableOpacity style={styles.leftBottom} onPress={() => {
               const productId = props.onDeleteProduct();
-              let objReturn = removeListing(productId);
-              dispatch(objReturn);
+              deleteHandler(productId)
             }}>
               <MaterialIcons style={styles.trashIcon} name="delete-forever" size={25} color="#254053" />
               <Text style={styles.removeText}>
@@ -67,7 +69,7 @@ const YourProduct = props => {
         </View>
 
       </View>
-    </View>
+    </Animatable.View>
   )
 }
 
@@ -80,22 +82,23 @@ const styles = StyleSheet.create({
   },
   itemContainer:{
     flexDirection: 'column',
-    backgroundColor: '#78D8D2',
-    height: 200,
+    backgroundColor: '#fbf7f7',
+    height: height / 4.5,
     paddingTop: 23,
     paddingHorizontal: 23,
     width:'96%',
     borderRadius: 5,
-    margin: 4,
-    overflow: 'hidden',
-    shadowColor: "#000",
+    marginVertical: 10,
+    // overflow: 'hidden',
+    shadowColor: "#e1dede",
     shadowOffset: {
-     width: 0,
-     height: 5,
+    	width: 0,
+    	height: 3,
     },
-    shadowOpacity: 0.36,
-    shadowRadius: 6.68,
-    elevation: 3,
+    shadowOpacity: 0.27,
+    shadowRadius: 4.65,
+
+    elevation: 6,
   },
   pictureWrap:{
     flex:1,
@@ -149,16 +152,19 @@ const styles = StyleSheet.create({
     opacity: 0.6,
     marginLeft: 5,
     fontSize: 14,
-    color: '#254053'
+    color: '#254053',
+    fontWeight: 'bold'
   },
   trashIcon:{
-    opacity: 0.6
+    opacity: 0.6,
+    color: '#e56767',
   },
   productText:{
     opacity: 0.6,
     marginLeft: 5,
     fontSize: 14,
-    color: '#254053'
+    color: '#254053',
+    fontWeight: 'bold'
   },
   rightBottom:{
     flex:1,

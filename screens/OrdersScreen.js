@@ -5,12 +5,18 @@ import HeaderButton from '../components/HeaderButton'
 import { useSelector, useDispatch} from 'react-redux'
 import CartItem from '../components/CartItem'
 import { placeOrder } from '../store/actions/products'
+import { fetchCart } from '../store/actions/products'
 
 const OrderScreen = props => {
 
   const [isLoading, setIsLoading] = useState(false)
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const result = fetchCart()
+    // console.log(result);
+  })
 
   const productsInCart = useSelector(state => state.allProducts.cart);
 
@@ -83,14 +89,25 @@ OrderScreen.navigationOptions = (data) => {
           data.navigation.navigate('PlacedOrders')
         }} />
       </HeaderButtons>
-    )
+    ),
+    headerStyle: {
+      backgroundColor: '#c6f1e7',
+      shadowRadius: 0,
+      shadowOffset: {
+          height: 0,
+        },
+    },
+    headerTitleStyle: {
+      fontSize: 20,
+      fontWeight: 'bold',
+    },
   }
 }
 
 const styles = StyleSheet.create({
   topInfo:{
     flexDirection: 'row',
-    backgroundColor: '#B2DBBF',
+    backgroundColor: '#c6f1e7',
   },
   priceSummary:{
     flex:1
@@ -138,7 +155,7 @@ const styles = StyleSheet.create({
   orderButton:{
     justifyContent: 'center',
     width: '70%',
-    bottom: 10,
+    bottom: 20,
     right: 50,
     position: 'absolute',
     alignItems: 'center',
@@ -148,9 +165,9 @@ const styles = StyleSheet.create({
     paddingTop: 12,
     paddingLeft: 16,
     paddingRight: 16,
-    borderColor: '#FF1654',
-    backgroundColor: '#FF1654',
-    shadowColor: "#000",
+    borderColor: '#e56767',
+    backgroundColor: '#e56767',
+    shadowColor: "#893D3D",
     shadowOffset: {
     	width: 0,
     	height: 5,

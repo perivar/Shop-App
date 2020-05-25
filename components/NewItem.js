@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity, TextInput, 
 import { addListing } from '../store/actions/products'
 import { useDispatch, useSelector } from 'react-redux'
 import Input from './Input'
+import ImagePicker from './ImagePicker'
 
 // const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
 
@@ -53,13 +54,13 @@ const NewItem = props => {
 // )
 
   const [nameHolder, setNameHolder] = useState("Add your Title")
-  const [priceHolder, setPriceHolder] = useState(500)
+  const [priceHolder, setPriceHolder] = useState(null)
   const [descHolder, setDescHolder] = useState("Add your Description")
   const [locationHolder, setLocationHolder] = useState("Add your Location")
-  const [imgHolder, setImgHolder] = useState("Add your image")
+  const [imgHolder, setImgHolder] = useState("Add your image url")
 
   const submitChanges = () => {
-    let objectReturn = addListing(nameHolder, descHolder, priceHolder, imgHolder)
+    let objectReturn = addListing(nameHolder, descHolder, priceHolder, imgHolder, locationHolder)
     dispatch(objectReturn)
     props.navigation.popToTop();
   }
@@ -119,10 +120,41 @@ const NewItem = props => {
                    style = {styles.input}
                    onChangeText={text => setImgHolder(text)}
                    selectionColor = "#9a73ef"
-                   placeholder="Add your image"
+                   placeholder="Add your image url"
                    textAlign="left"
                  />
               </View>
+
+              <View style={styles.priceWrap}>
+                <Text style={styles.text}>
+                  Price
+                </Text>
+                <TextInput
+                   style = {styles.input}
+                   onChangeText={text => setPriceHolder(text)}
+                   selectionColor = "#9a73ef"
+                   placeholder="Add your price"
+                   textAlign="left"
+                   keyboardType="number-pad"
+                 />
+              </View>
+
+              <View style={styles.locWrap}>
+                <Text style={styles.text}>
+                  Location
+                </Text>
+                <TextInput
+                   style = {styles.input}
+                   onChangeText={text => setLocationHolder(text)}
+                   selectionColor = "#9a73ef"
+                   placeholder="Where is it sold?"
+                   textAlign="left"
+                   keyboardType="default"
+                 />
+              </View>
+
+              <ImagePicker />
+
               <View style={styles.pricewrapper}>
                 <TouchableOpacity style={styles.submitWrapper} onPress={submitChanges}>
                   <Text style={styles.buttonText}>Add Product</Text>
@@ -196,6 +228,9 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     marginBottom: 15,
     flex:1
+  },
+  priceWrap:{
+    marginBottom: 15,
   },
   price:{
     fontSize: 16,

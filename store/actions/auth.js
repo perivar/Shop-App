@@ -4,6 +4,11 @@ export const LOGOUT = "LOGOUT"
 export const AUTHENTICATE = "AUTHENTICATE"
 
 let timer;
+// firebase.initializeApp({
+//   apiKey: "AIzaSyCngPfFt7-u-cmGhsj86-rB-OP9inA411k",
+//   projectId: "rental-app-743c0",
+//   databaseURL: "https://rental-app-743c0.firebaseio.com/",
+// })
 
 export const authenticate = (userId, token, expiryTime) => {
   return dispatch => {
@@ -12,7 +17,7 @@ export const authenticate = (userId, token, expiryTime) => {
   }
 }
 
-export const signup = (email, password) => {
+export const signup = (email, password, name, picture) => {
   return async dispatch => {
     const response = await fetch(
       'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCngPfFt7-u-cmGhsj86-rB-OP9inA411k'
@@ -36,11 +41,37 @@ export const signup = (email, password) => {
       }
       throw new Error(message)
     }
-
     const resData = await response.json()
+
+    const updateUser = await fetch(
+      'https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyCngPfFt7-u-cmGhsj86-rB-OP9inA411k',
+      {
+        method: 'POST',
+        headers:{
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          idToken: resData.idToken,
+          displayName: name,
+          // photoUrl: picture
+          returnSecureToken: true
+        })
+      }
+    )
+    if(!updateUser.ok){
+      const errorRes = await updateUser.json()
+      const errorIds = errorRes.error.message
+      let errorMessage = 'Something went wrong'
+      if(errorIds === 'INVALID_ID_TOKEN'){
+        errorMessage = 'Did you type the same password?'
+      }
+      throw new Error(errorMessage)
+    }
+    const updateData = await updateUser.json()
+
     dispatch(authenticate(resData.localId, resData.idToken, parseInt(resData.expiresIn) * 1000))
     const expirationDate = new Date(new Date().getTime() + parseInt(resData.expiresIn) * 1000)
-    saveDataToStorage(resData.idToken, resData.localId, expirationDate)
+    saveDataToStorage(resData.idToken, resData.localId, expirationDate, updateData.displayName)
   }
 }
 
@@ -72,9 +103,10 @@ export const login = (email, password) => {
     }
 
     const resData = await response.json()
+
     dispatch(authenticate(resData.localId, resData.idToken, parseInt(resData.expiresIn) * 1000))
     const expirationDate = new Date(new Date().getTime() + parseInt(resData.expiresIn) * 1000)
-    saveDataToStorage(resData.idToken, resData.localId, expirationDate)
+    saveDataToStorage(resData.idToken, resData.localId, expirationDate,resData.displayName)
   }
 }
 
@@ -98,11 +130,12 @@ export const logout = () => {
 //   }
 // }
 
-//Storing data on the harddrive to be able to have ato login
-const saveDataToStorage = (token, userId, expirationDate) => {
+//Storing data on the harddrive to be able to have auto login
+const saveDataToStorage = (token, userId, expirationDate, displayName) => {
   AsyncStorage.setItem('userData', JSON.stringify({
     token: token,
     userId: userId,
-    expiryDate: expirationDate.toISOString()
+    expiryDate: expirationDate.toISOString(),
+    displayName: displayName
   }))
 }

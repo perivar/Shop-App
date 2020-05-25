@@ -9,11 +9,11 @@ export const EDIT_LISTING = "EDIT_LISTING"
 export const SET_PRODUCTS = "SET_PRODUCTS"
 export const PLACE_ORDER = "PLACE_ORDER"
 export const SET_ORDERS = "SET_ORDERS"
+export const SET_CART = "SET_CART"
 
 export const fetchOrders = () => {
   return async (dispatch, getState) => {
     const userId = getState().auth.userId
-    console.log(userId);
     try {
       const response = await fetch(`https://rental-app-743c0.firebaseio.com/orders/${userId}.json`);
     if (!response.ok) {
@@ -39,8 +39,11 @@ export const fetchOrders = () => {
 
 export const fetchProducts = () => {
     return async (dispatch, getState) => {
+      const updatedCart = getState().allProducts["cart"].map(prod => prod);
+      const updatedCounter = getState().allProducts["counter"].map(prod => prod);
+      const updatedSumCart = getState().allProducts["sumCart"];
+
       const userId = getState().auth.userId
-      console.log(userId);
       try {
         const response = await fetch('https://rental-app-743c0.firebaseio.com/products.json');
 
@@ -51,13 +54,21 @@ export const fetchProducts = () => {
       const resData = await response.json();
       const loadedProducts = [];
 
+
       for (const key in resData) {
-        loadedProducts.push(new Product(key, resData[key].ownerId, 'Alfred Johnsen', resData[key].name, resData[key].imgUrl, resData[key].description, resData[key].price))
+        loadedProducts.push(new Product(key, resData[key].ownerId, 'Alfred Johnsen', resData[key].name, resData[key].imgUrl, resData[key].description, resData[key].price, resData[key].location))
       }
-      dispatch({ type: SET_PRODUCTS, products: loadedProducts, userProducts: loadedProducts.filter(prod => prod.userId === userId) })
+      dispatch({ type: SET_PRODUCTS, products: loadedProducts, userProducts: loadedProducts.filter(prod => prod.userId === userId), cart: updatedCart, counter: updatedCounter, sumCart: updatedSumCart})
     } catch (err) {
       throw err;
     }
+  }
+}
+
+export const fetchCart = (cartstate) => {
+  return async (dispatch, getState) => {
+    const cart = getState()
+    console.log(cart);
   }
 }
 
@@ -101,7 +112,7 @@ export const removeFromCart = (productId) => {
   return { type: DELETE_CART, productId: productId}
 }
 
-export const addListing = (name, description, price, imgUrl) => {
+export const addListing = (name, description, price, imgUrl, location) => {
   return async (dispatch, getState) => {
     const token = getState().auth.token
     const userId = getState().auth.userId
@@ -111,17 +122,18 @@ export const addListing = (name, description, price, imgUrl) => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        name,
         description,
-        price,
         imgUrl,
-        ownerId: userId
+        name,
+        ownerId: userId,
+        price,
+        location
       })
     });
 
     const resData = await response.json();
 
-    dispatch({ type: NEW_LISTING, productId: resData.name, name: name, description: description, price: price, url: imgUrl, ownerId: userId })
+    dispatch({ type: NEW_LISTING, productId: resData.name, name: name, description: description, price: price, url: imgUrl, ownerId: userId, location: location})
   }
 }
 
@@ -136,11 +148,11 @@ export const removeListing = (productId) => {
       throw new Error("Something went wrong")
     }
 
-    dispatch({ type: DEL_LISTING, productId: productId})
+    dispatch({ type: DEL_LISTING, productId: productId })
   }
 }
 
-export const editListing = (productId, name, description) => {
+export const editListing = (productId, name, description, location, price, imgUrl) => {
   return async (dispatch, getState) => {
     const token = getState().auth.token
     const response = await fetch(`https://rental-app-743c0.firebaseio.com/products/${productId}.json?auth=${token}`, {
@@ -151,6 +163,9 @@ export const editListing = (productId, name, description) => {
       body: JSON.stringify({
         name,
         description,
+        imgUrl,
+        location,
+        price
       })
     });
 
@@ -158,6 +173,6 @@ export const editListing = (productId, name, description) => {
       throw new Error("Something went wrong")
     }
 
-    dispatch({ type: EDIT_LISTING, productId: productId, name: name, description: description})
+    dispatch({ type: EDIT_LISTING, productId: productId, name: name, description: description, location: location, price: price, url: imgUrl})
   }
 }

@@ -7,6 +7,7 @@ import { EDIT_LISTING } from '../actions/products'
 import { SET_PRODUCTS } from '../actions/products'
 import { SET_ORDERS } from '../actions/products'
 import { PLACE_ORDER } from '../actions/products'
+import { SET_CART } from '../actions/products'
 import Product from '../../models/product'
 import Order from '../../models/order';
 
@@ -66,12 +67,18 @@ const productReducer = (state = initialState, action) => {
 
     case DEL_LISTING:
       const copyProducts = [...state.products]
+      const copyUser = [...state.userProducts]
+
       const yourProductToDelete = copyProducts.find(product => product.id === action.productId)
+      const userProdToDelete = copyUser.find(product => product.id === action.productId)
+
       const index = copyProducts.findIndex(product => product.id === yourProductToDelete.id)
+      const prod = copyUser.findIndex(product => product.id === userProdToDelete.id)
 
       copyProducts.splice(index, 1)
+      copyUser.splice(prod, 1)
 
-      return {...state, products: copyProducts}
+      return {...state, products: copyProducts, userProducts: copyUser}
 
     case EDIT_LISTING:
       const productToEdit = state.products.find(product => product.id === action.productId)
@@ -79,8 +86,12 @@ const productReducer = (state = initialState, action) => {
       const productIndex = copyState.findIndex(product => product.id === productToEdit.id)
 
       const updatedProduct = copyState[productIndex]
+      console.log(updatedProduct);
       updatedProduct.name = action.name
       updatedProduct.description = action.description
+      updatedProduct.location = action.location
+      updatedProduct.price = action.price
+      updatedProduct.url = action.url
 
       copyState.splice(productIndex, 1, updatedProduct);
 
@@ -96,7 +107,9 @@ const productReducer = (state = initialState, action) => {
       action.name,
       action.url,
       action.description,
-      action.price)
+      action.price,
+      action.location)
+
       currState.push(newProduct)
 
       return { ...state, products: state.products.concat(newProduct), userProducts: state.userProducts.concat(newProduct)}
@@ -104,12 +117,14 @@ const productReducer = (state = initialState, action) => {
     case SET_PRODUCTS:
       return {
       products: action.products,
-      cart: [],
-      counter: [],
-      sumCart: 0,
+      counter: action.counter,
+      cart: action.cart,
+      sumCart: action.sumCart,
       orders: [],
       userProducts: action.userProducts
     }
+    case SET_CART:
+      return {...state, cart: action.cart}
 
     case SET_ORDERS:
       return { ...state, orders: action.orders }

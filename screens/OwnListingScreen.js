@@ -1,11 +1,15 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback, useEffect} from 'react'
 import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 import HeaderButton from '../components/HeaderButton'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch} from 'react-redux'
 import YourProduct from '../components/YourProduct'
+import Animated, { Easing } from 'react-native-reanimated';
+import * as Animatable from 'react-native-animatable';
 
 const OwnListing = props => {
+  const [isRefreshing, setIsRefreshing] = useState(false)
+
   const product = useSelector(state => state.allProducts.products)
   const userProducts = useSelector(state => state.allProducts.userProducts);
 
@@ -40,13 +44,20 @@ const OwnListing = props => {
   if(userProducts.length === 0){
     return(
     <View style={styles.screen}>
-      <View style={styles.topInfo}>
+      <Animatable.View
+        animation="fadeInDown"
+        duration={800}
+        style={styles.topInfo}>
         <View style={styles.leftTop}>
-          <Text style={styles.summaryTitle}>
+          <Animatable.Text
+            animation="fadeInDown"
+            delay={200}
+            duration={800}
+            style={styles.summaryTitle}>
             You have {userProducts.length} products for sale
-          </Text>
+          </Animatable.Text>
         </View>
-      </View>
+      </Animatable.View>
       <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
         <Text>
           No products found
@@ -58,14 +69,23 @@ const OwnListing = props => {
 
   return (
     <View style={styles.screen}>
-      <View style={styles.topInfo}>
+      <Animatable.View
+        animation="fadeInLeft"
+        duration={800}
+        style={styles.topInfo}>
         <View style={styles.leftTop}>
-          <Text style={styles.summaryTitle}>
+          <Text
+            style={styles.summaryTitle}>
             You have {userProducts.length} products for sale
           </Text>
         </View>
-      </View>
-      <FlatList numColumns={1} data={userProducts} renderItem={renderItems} keyExtractor={(item, index) => item.id}/>
+      </Animatable.View>
+      <FlatList
+        refreshing={isRefreshing}
+        numColumns={1}
+        data={userProducts}
+        renderItem={renderItems}
+        keyExtractor={(item, index) => item.id}/>
     </View>
   )
 }
@@ -79,26 +99,39 @@ OwnListing.navigationOptions = (data) => {
           data.navigation.navigate('NewListing')
         }} />
       </HeaderButtons>
-    )
+    ),
+    headerStyle: {
+      backgroundColor: '#c6f1e7',
+      shadowRadius: 0,
+      shadowOffset: {
+          height: 0,
+        },
+    },
+    headerTitleStyle: {
+      fontSize: 20,
+      fontWeight: 'bold',
+    },
   }
 }
 
 const styles = StyleSheet.create({
   screen:{
-    flex:1
+    flex:1,
+    backgroundColor: '#F5E9EA'
   },
   topInfo:{
     flexDirection: 'row',
-    backgroundColor: '#d8eff9',
-    height: 60
+    backgroundColor: '#c6f1e7',
+    height: 60,
   },
   leftTop:{
     flex:1,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   summaryTitle:{
-    fontSize: 20,
-    fontWeight: '900',
+    fontSize: 18,
+    fontWeight: '600',
     opacity: 0.8,
     color: '#254053',
     paddingLeft: 20

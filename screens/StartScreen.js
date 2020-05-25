@@ -38,8 +38,14 @@ export default class StartScreen extends React.Component{
             <TouchableOpacity
               onPress={() => {this.props.navigation.navigate("login")}}
               style={{...styles.button, backgroundColor: '#e56767', flexDirection: 'row', justifyContent: 'center'}}>
-              <Text style={{fontSize: 20, fontWeight: 'bold', color: 'white'}}>Get started!</Text>
+              <Text style={{fontSize: 20, fontWeight: 'bold', color: 'white'}}>Log in</Text>
               <MaterialIcons name="navigate-next" size={26} color="white"/>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {this.props.navigation.navigate("signup")}}
+              style={{...styles.button, borderWidth: 2,backgroundColor: 'rgba(229,	103,	103, 0)', borderColor: '#e56767', flexDirection: 'row', justifyContent: 'center'}}>
+              <Text style={{fontSize: 20, fontWeight: '500', color: 'black'}}>Sign up</Text>
+              <MaterialIcons name="navigate-next" size={26} color="black"/>
             </TouchableOpacity>
           {/* </View> */}
         </Animatable.View>
@@ -70,7 +76,7 @@ const styles = StyleSheet.create({
     borderRadius: height_logo / 2,
   },
   buttonWrapper:{
-    height: height / 3,
+    height: height / 2.5,
     justifyContent: 'center',
     backgroundColor: 'white',
     borderTopLeftRadius: 30,
@@ -82,6 +88,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#3c8b80',
     marginHorizontal: 30,
+    marginBottom: 25
   },
   button:{
     backgroundColor: 'white',
@@ -90,7 +97,7 @@ const styles = StyleSheet.create({
     borderRadius: 35,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 45
+    marginTop: 20
   },
   bgImg:{
     flex:1,

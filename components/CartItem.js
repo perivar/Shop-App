@@ -9,6 +9,7 @@ const CartItem = props =>  {
   const dispatch = useDispatch()
 
   const cart = useSelector(state => state.allProducts.cart)
+  
   const numberOfProduct = useSelector(state => state.allProducts.counter)
   const findProduct = numberOfProduct.find(product => product.product === props.id)
   return (

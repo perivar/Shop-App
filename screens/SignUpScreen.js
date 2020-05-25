@@ -1,5 +1,5 @@
 import React, { useState, useReducer, useCallback, useEffect, useRef } from 'react'
-import { ScrollView, View, StyleSheet, KeyboardAvoidingView, TouchableOpacity, Text, Button, ActivityIndicator, Alert, Image, Dimensions } from 'react-native'
+import { ScrollView, View, TextInput, StyleSheet, KeyboardAvoidingView, TouchableOpacity, Text, Button, ActivityIndicator, Alert, Image, Dimensions } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useDispatch } from 'react-redux'
 import { signup } from '../store/actions/auth'
@@ -42,7 +42,9 @@ const formReducer = (state, action) => {
 const SignUpScreen = props => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState()
+  const [value, onChangeText] = useState(null);
   const [passCheck, setPassCheck] = useState(false)
+
 
   const dispatch = useDispatch()
 
@@ -50,6 +52,7 @@ const SignUpScreen = props => {
    inputValues: {
     email: '',
     password: '',
+    name: ''
    },
    inputValidities: {
      email: false,
@@ -71,9 +74,9 @@ const SignUpScreen = props => {
       }
       let action = signup(
          formState.inputValues.email,
-         formState.inputValues.password
+         formState.inputValues.password,
+         formState.inputValues.name
        );
-
      setError(null)
      setIsLoading(true)
      try{
@@ -85,17 +88,14 @@ const SignUpScreen = props => {
     }
    };
 
+useEffect(() => {
+  if (value === formState.inputValues.password) {
+    setPassCheck(true)
+  }
+}, [value])
+
    const inputChangeHandler = useCallback(
      (inputIdentifier, inputValue, inputValidity) => {
-       if (inputIdentifier === "confirm_password"){
-         let passwordCheck = false
-         if(inputValue == formState.inputValues["password"]){
-           setPassCheck(true)
-         }
-         else{
-           setPassCheck(false)
-         }
-       }
        dispatchFormState({
          type: FORM_INPUT_UPDATE,
          value: inputValue,
@@ -124,7 +124,7 @@ const SignUpScreen = props => {
       <View style={{flex:1, justifyContent: 'flex-end'}}>
 
         <View style={styles.arrowWrap}>
-          <MaterialIcons onPress={() => {props.navigation.navigate("login")}} name="navigate-before" color="white" size={35}/>
+          <MaterialIcons onPress={() => {props.navigation.navigate("start")}} name="navigate-before" color="white" size={35}/>
         </View>
 
         <View style={styles.header}>
@@ -137,30 +137,47 @@ const SignUpScreen = props => {
           animation="fadeInUpBig"
           style={styles.buttonWrapper}>
           <ScrollView style={styles.form}>
-          <Text style={styles.inputTitle}>Email</Text>
-          <View style={styles.inputcontainer}>
-            <View style={styles.iconcont}>
-              <MaterialIcons name="person-outline" size={30} color="#3c8b80"/>
+          <View style={styles.cont}>
+            <View style={styles.titlecont}>
+              <Text style={styles.inputTitle}>Full name</Text>
             </View>
-            <Input
-              id="email"
-              placeholder='Your email'
-              leftIcon={
-                <Icon
-                  name='user'
-                  size={24}
-                  color='black'
-                />
-              }
-              containerStyle={styles.input}
-              keyboardType="email-address"
-              required
-              email
-              autoCapitalize="none"
-              errorText="plase enter valid email"
-              onInputChange={inputChangeHandler}
-              initialValue=""
-            />
+            <View style={styles.inputcontainer}>
+              <View style={styles.iconcont}>
+                <MaterialIcons name="lock-outline" size={30} color="#3c8b80"/>
+              </View>
+              <Input
+                id="name"
+                placeholder='Full Name'
+                keyboardType="default"
+                required
+                autoCapitalize="none"
+                onInputChange={inputChangeHandler}
+                initialValue=""
+              />
+            </View>
+          </View>
+
+          <View style={styles.cont}>
+            <View style={styles.titlecont}>
+              <Text style={styles.inputTitle}>Email</Text>
+            </View>
+            <View style={styles.inputcontainer}>
+              <View style={styles.iconcont}>
+                <MaterialIcons name="person-outline" size={30} color="#3c8b80"/>
+              </View>
+              <Input
+                id="email"
+                placeholder='Your email'
+                containerStyle={styles.input}
+                keyboardType="email-address"
+                required
+                email
+                autoCapitalize="none"
+                errorText="plase enter valid email"
+                onInputChange={inputChangeHandler}
+                initialValue=""
+              />
+            </View>
           </View>
 
           <View style={{height: height / 25}}></View>
@@ -192,14 +209,13 @@ const SignUpScreen = props => {
 
           <View style={styles.cont}>
             <View style={styles.titlecont}>
-              <Text style={styles.inputTitle}>Confirm Password</Text>
+              <Text style={styles.confirmTitle}>Confirm Password</Text>
             </View>
-            <View style={styles.inputcontainer}>
+            <View style={styles.formControl}>
               <View style={styles.iconcont}>
                 <MaterialIcons name="lock-outline" size={30} color="#3c8b80"/>
               </View>
-              <Input
-                id="confirm_password"
+              <TextInput
                 placeholder='Confirm Password'
                 keyboardType="default"
                 secureTextEntry
@@ -207,8 +223,9 @@ const SignUpScreen = props => {
                 minLength={5}
                 autoCapitalize="none"
                 errorText="plase enter valid password"
-                onInputChange={inputChangeHandler}
-                initialValue=""
+                onChangeText={(password) => onChangeText(password)}
+                value={value}
+                style={styles.input}
               />
             </View>
           </View>
@@ -276,18 +293,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-end',
   },
+  formControl:{
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+  },
   inputTitle:{
     fontSize: 20,
     fontWeight: 'bold',
     color: '#3c8b80',
-    top: 15
+    top: 15,
+  },
+  confirmTitle:{
+    marginVertical: 8,
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#3c8b80',
   },
   iconcont:{
     flexDirection: 'column',
     paddingRight: 10
   },
   buttonWrapper:{
-    height: height / 1.4,
+    height: height / 1.35,
     justifyContent: 'center',
     backgroundColor: 'white',
     borderTopLeftRadius: 30,
@@ -305,6 +332,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 45
   },
+  input:{
+    width: '100%',
+    paddingHorizontal: 2,
+    paddingVertical: 5,
+    borderBottomColor: '#ccc',
+    borderBottomWidth: 1
+  }
 })
 
 export default SignUpScreen;
