@@ -1,14 +1,21 @@
 import React, { useState, useEffect} from 'react'
 import { AsyncStorage } from 'react-native'
-import { View, Text, StyleSheet, ActivityIndicator, Button, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, ActivityIndicator, Button, FlatList, TouchableOpacity } from 'react-native';
 import { useDispatch } from 'react-redux'
 import { logout } from '../store/actions/auth'
+import firebase from 'firebase';
 
 const SettingsScreen = props => {
   const [isLoading, setIsLoading] = useState(false)
   const [username, setUsername] = useState(null)
+  const [avatar, setAvatar] = useState("fill")
   const fetchUserData = async () => {
     try {
+        const user = await firebase.auth().currentUser;
+        if (user != null) {
+          setAvatar(user.photoURL)
+        }
+
         const value = await AsyncStorage.getItem('userData');
         if (value !== null) {
           const response = await JSON.parse(value)
@@ -38,6 +45,7 @@ const SettingsScreen = props => {
 
   return (
     <View style={styles.container}>
+      <Image source={{uri: avatar}} style={styles.img}/>
       <Text style={styles.text}>
         Welcome {username}
       </Text>
@@ -61,6 +69,12 @@ const styles = StyleSheet.create({
   text:{
     color: 'black'
   },
+  img:{
+    width: 100,
+    height: 100,
+    borderRadius: 50
+    },
+
   buttonStyle:{
 
   }

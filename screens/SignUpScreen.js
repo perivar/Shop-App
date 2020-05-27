@@ -9,6 +9,8 @@ import { TapGestureHandler, State } from 'react-native-gesture-handler'
 import * as Animatable from 'react-native-animatable';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import UserPermissions from '../components/UserPermissions'
+import * as ImagePicker from 'expo-image-picker'
 
 import Input from '../components/Input'
 
@@ -44,7 +46,7 @@ const SignUpScreen = props => {
   const [error, setError] = useState()
   const [value, onChangeText] = useState(null);
   const [passCheck, setPassCheck] = useState(false)
-
+  const [avatar, setAvatar] = useState("baafal")
 
   const dispatch = useDispatch()
 
@@ -67,6 +69,20 @@ const SignUpScreen = props => {
    }
  }, [error])
 
+ const avatarHandler = async () => {
+   UserPermissions.getCameraPermission()
+
+   const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 0.5,
+      });
+      if (!result.cancelled) {
+        setAvatar(result.uri)
+      }
+ }
+
  const authHandler = async () => {
       if(passCheck === false){
         Alert.alert('Password not the same!', error, [{text: 'Okay'}])
@@ -75,7 +91,8 @@ const SignUpScreen = props => {
       let action = signup(
          formState.inputValues.email,
          formState.inputValues.password,
-         formState.inputValues.name
+         formState.inputValues.name,
+         avatar
        );
      setError(null)
      setIsLoading(true)
@@ -128,15 +145,28 @@ useEffect(() => {
         </View>
 
         <View style={styles.header}>
-          <Text style={styles.headerText}>
+          {/* <Text style={styles.headerText}>
             Let's create a profile
-          </Text>
+          </Text> */}
         </View>
 
         <Animatable.View
           animation="fadeInUpBig"
           style={styles.buttonWrapper}>
           <ScrollView style={styles.form}>
+
+          <View style={{alignItems: 'center', width: '100%'}}>
+            <TouchableOpacity style={styles.avatar} onPress={avatarHandler}>
+              <Image source={{uri: avatar}} style={styles.img}/>
+              <Ionicons
+                size={40}
+                color="#3c8b80"
+                name="ios-add"
+                style={{marginTop: 6}}
+              />
+            </TouchableOpacity>
+          </View>
+
           <View style={styles.cont}>
             <View style={styles.titlecont}>
               <Text style={styles.inputTitle}>Full name</Text>
@@ -156,7 +186,7 @@ useEffect(() => {
               />
             </View>
           </View>
-
+          <View style={{height: height / 40}}></View>
           <View style={styles.cont}>
             <View style={styles.titlecont}>
               <Text style={styles.inputTitle}>Email</Text>
@@ -180,7 +210,7 @@ useEffect(() => {
             </View>
           </View>
 
-          <View style={{height: height / 25}}></View>
+          <View style={{height: height / 40}}></View>
 
           <View style={styles.cont}>
             <View style={styles.titlecont}>
@@ -205,7 +235,7 @@ useEffect(() => {
             </View>
           </View>
 
-          <View style={{height: height / 25}}></View>
+          <View style={{height: height / 30}}></View>
 
           <View style={styles.cont}>
             <View style={styles.titlecont}>
@@ -281,7 +311,9 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   header:{
-    marginBottom: height / 13,
+    marginBottom: height / 30,
+    justifyContent: 'center',
+    alignItems: 'flex-end',
     paddingHorizontal: 15,
   },
   headerText:{
@@ -303,6 +335,20 @@ const styles = StyleSheet.create({
     color: '#3c8b80',
     top: 15,
   },
+  avatar:{
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: "#E1E2E6",
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  img:{
+    position: 'absolute',
+    width: 100,
+    height: 100,
+    borderRadius: 50
+  },
   confirmTitle:{
     marginVertical: 8,
     fontSize: 20,
@@ -314,7 +360,7 @@ const styles = StyleSheet.create({
     paddingRight: 10
   },
   buttonWrapper:{
-    height: height / 1.35,
+    height: height / 1.15,
     justifyContent: 'center',
     backgroundColor: 'white',
     borderTopLeftRadius: 30,

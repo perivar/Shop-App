@@ -6,6 +6,8 @@ import { logout } from '../store/actions/auth'
 import * as ImagePicker from 'expo-image-picker'
 import * as Permissions from 'expo-permissions'
 
+import { db } from '../config';
+
 const ImgPicker = props => {
   const [pickedImage, setPickedImage] = useState()
   const verifyPermissions = async () => {
@@ -28,6 +30,7 @@ const ImgPicker = props => {
       quality: 0.5
     });
     setPickedImage(image.uri)
+    props.onImageTaken(image.uri)
   }
 
   return (

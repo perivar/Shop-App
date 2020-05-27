@@ -32,9 +32,12 @@ import ImagePicker from './ImagePicker'
 const NewItem = props => {
 
   const dispatch = useDispatch()
-
+  const [selectedImage, setSelectedImage] = useState(null)
   const currentState = useSelector(state => state.allProducts.products)
 
+  const imageHandler = (imagePath) => {
+    setSelectedImage(imagePath)
+  }
 //   const [formState, dispatchFormState] = useReducer(formReducer, {
 //     inputValues: {
 //     name: 'Add title',
@@ -153,7 +156,7 @@ const NewItem = props => {
                  />
               </View>
 
-              <ImagePicker />
+              <ImagePicker onImageTaken={imageHandler}/>
 
               <View style={styles.pricewrapper}>
                 <TouchableOpacity style={styles.submitWrapper} onPress={submitChanges}>
