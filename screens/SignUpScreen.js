@@ -173,7 +173,7 @@ useEffect(() => {
             </View>
             <View style={styles.inputcontainer}>
               <View style={styles.iconcont}>
-                <MaterialIcons name="lock-outline" size={30} color="#3c8b80"/>
+                <MaterialIcons name="person-outline" size={30} color="#3c8b80"/>
               </View>
               <Input
                 id="name"

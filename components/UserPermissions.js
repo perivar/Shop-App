@@ -9,6 +9,12 @@ class UserPermissions {
       Alert.alert("Need permissions to take photo", [{text: 'Okay'}])
     }
   }
+  getLocationPermission = async () => {
+    const { status } = await Permissions.askAsync(Permissions.LOCATION)
+    if (status != "granted") {
+      Alert.alert("Need permissions to take photo", [{text: 'Okay'}])
+    }
+  }
 }
 
 export default new UserPermissions();

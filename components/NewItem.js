@@ -4,6 +4,7 @@ import { addListing } from '../store/actions/products'
 import { useDispatch, useSelector } from 'react-redux'
 import Input from './Input'
 import ImagePicker from './ImagePicker'
+import LocationPicker from './LocationPicker'
 
 // const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
 
@@ -60,10 +61,9 @@ const NewItem = props => {
   const [priceHolder, setPriceHolder] = useState(null)
   const [descHolder, setDescHolder] = useState("Add your Description")
   const [locationHolder, setLocationHolder] = useState("Add your Location")
-  const [imgHolder, setImgHolder] = useState("Add your image url")
 
   const submitChanges = () => {
-    let objectReturn = addListing(nameHolder, descHolder, priceHolder, imgHolder, locationHolder)
+    let objectReturn = addListing(nameHolder, descHolder, priceHolder, selectedImage, locationHolder)
     dispatch(objectReturn)
     props.navigation.popToTop();
   }
@@ -115,19 +115,6 @@ const NewItem = props => {
                  />
               </View>
 
-              <View style={styles.locationWrapper}>
-                <Text style={styles.text}>
-                  Image
-                </Text>
-                <TextInput
-                   style = {styles.input}
-                   onChangeText={text => setImgHolder(text)}
-                   selectionColor = "#9a73ef"
-                   placeholder="Add your image url"
-                   textAlign="left"
-                 />
-              </View>
-
               <View style={styles.priceWrap}>
                 <Text style={styles.text}>
                   Price
@@ -142,7 +129,7 @@ const NewItem = props => {
                  />
               </View>
 
-              <View style={styles.locWrap}>
+              {/* <View style={styles.locWrap}>
                 <Text style={styles.text}>
                   Location
                 </Text>
@@ -154,7 +141,8 @@ const NewItem = props => {
                    textAlign="left"
                    keyboardType="default"
                  />
-              </View>
+              </View> */}
+              <LocationPicker />
 
               <ImagePicker onImageTaken={imageHandler}/>
 

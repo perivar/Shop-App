@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux'
 import { logout } from '../store/actions/auth'
 import * as ImagePicker from 'expo-image-picker'
 import * as Permissions from 'expo-permissions'
+import * as firebase from 'firebase'
 
 import { db } from '../config';
 
@@ -29,8 +30,28 @@ const ImgPicker = props => {
       aspect: [16,9],
       quality: 0.5
     });
-    setPickedImage(image.uri)
-    props.onImageTaken(image.uri)
+
+    if (!image.cancelled) {
+
+      let cut = image.uri.split("ImagePicker");
+      let mid = cut[1].split("/")
+      let final = mid[1].split(".");
+      final.pop()
+      let imageName = final.join("")
+
+      setPickedImage(image.uri)
+      uploadImage(image.uri, imageName)
+    }
+  }
+
+  const uploadImage = async (uri, imageName) => {
+    const response = await fetch(uri)
+    const blob = await response.blob()
+
+    var ref = firebase.storage().ref().child("images/" + imageName)
+    await ref.put(blob)
+    const url = await ref.getDownloadURL()
+    props.onImageTaken(url)
   }
 
   return (
