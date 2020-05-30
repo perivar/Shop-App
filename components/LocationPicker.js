@@ -12,6 +12,7 @@ import UserPermissions from './UserPermissions'
 import { db } from '../config';
 
 const LocationPicker = props => {
+
   const [isFetching, setIsFetching] = useState(false)
   const [location, setLocation] = useState()
 
@@ -20,11 +21,12 @@ const LocationPicker = props => {
 
    try {
     setIsFetching(true)
-    const userLocation = await Location.getCurrentPositionAsync({timeout: 5000})
+    const userLocation = await Location.getCurrentPositionAsync()
     setLocation({
       lat: userLocation.coords.latitude,
       lng: userLocation.coords.longitude
     })
+    props.onLocation(location)
   }catch (err){
     Alert.alert('Could not get position')
   }

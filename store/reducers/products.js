@@ -103,7 +103,7 @@ const productReducer = (state = initialState, action) => {
       const newProduct = new Product(
       action.productId,
       action.ownerId,
-      'Alfred Johansen',
+      action.seller,
       action.name,
       action.url,
       action.description,

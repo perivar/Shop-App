@@ -1,80 +1,82 @@
-import React, { useState, useReducer } from 'react'
+import React, { useState, useReducer, useEffect } from 'react'
 import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity, TextInput, KeyboardAvoidingView, ScrollView } from 'react-native';
 import { addListing } from '../store/actions/products'
 import { useDispatch, useSelector } from 'react-redux'
+import { AsyncStorage } from 'react-native'
 import Input from './Input'
 import ImagePicker from './ImagePicker'
 import LocationPicker from './LocationPicker'
-
-// const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
-
-// const formReducer = (state, action) => {
-//   if(action.type === FORM_INPUT_UPDATE){
-//
-//     const updatedValues = {
-//       ...state.inputValues,
-//       [action.input]: action.value
-//     };
-//     const updatedvalidity = {
-//       ...state.inputValidity,
-//       [action.input]: action.isValid
-//     }
-//     let updatedFormIsValid = true;
-//     for(const key in updatedvalidity){
-//       updatedFormIsValid = updatedFormIsValid && updatedvalidity[key];
-//
-//     }
-//
-//     return { formIsValid: updatedFormIsValid, inputValues: updatedValues, inputValidity: updatedvalidity}
-//   }
-//   return state;
-// }
+import Geocoder from 'react-native-geocoding';
+import * as firebase from 'firebase'
 
 const NewItem = props => {
 
   const dispatch = useDispatch()
   const [selectedImage, setSelectedImage] = useState(null)
+  const [selectedLocation, setSelectedLocation] = useState(null)
+  const [username, setUsername] = useState(null)
+  const [profilePic, setProfilePic] = useState(null)
   const currentState = useSelector(state => state.allProducts.products)
 
   const imageHandler = (imagePath) => {
     setSelectedImage(imagePath)
   }
-//   const [formState, dispatchFormState] = useReducer(formReducer, {
-//     inputValues: {
-//     name: 'Add title',
-//     price: 500,
-//     description: 'Add your description',
-//     location: 'Add location of product'
-//   },
-//   inputValidity: {
-//     name: false,
-//     price: true,
-//     description: false,
-//     location:false
-//   },
-//   formIsValid: {
-//     formIsValid: false
-//   }}
-// )
+
+  const fetchUserData = async () => {
+    try {
+        const user = await firebase.auth().currentUser;
+        if (user != null) {
+
+          let cut = user.photoURL.split("ImagePicker");
+          let mid = cut[1].split("/")
+          let final = mid[1].split(".");
+          final.pop()
+          let imageName = final.join("")
+          uploadImage(user.photoURL,imageName)
+          setUsername(user.displayName);
+        }
+
+      } catch (error) {
+        // Error retrieving data
+      }
+  }
+
+  const uploadImage = async (uri, imageName) => {
+    const response = await fetch(uri)
+    const blob = await response.blob()
+
+    var ref = firebase.storage().ref().child("profilePictures/" + imageName)
+    await ref.put(blob)
+    const url = await ref.getDownloadURL()
+    setProfilePic(url)
+  }
+
+  const locationHandler = (coordinates) => {
+    Geocoder.init("AIzaSyCngPfFt7-u-cmGhsj86-rB-OP9inA411k");
+    Geocoder.from(coordinates.lat, coordinates.lng)
+          .then(json => {
+              var addressComponent = json.results[3].address_components[1];
+              const city = addressComponent["long_name"]
+              setSelectedLocation(city)
+          })
+          .catch(error => console.log(error));
+  }
 
   const [nameHolder, setNameHolder] = useState("Add your Title")
   const [priceHolder, setPriceHolder] = useState(null)
   const [descHolder, setDescHolder] = useState("Add your Description")
-  const [locationHolder, setLocationHolder] = useState("Add your Location")
+  // const [locationHolder, setLocationHolder] = useState("Add your Location")
 
   const submitChanges = () => {
-    let objectReturn = addListing(nameHolder, descHolder, priceHolder, selectedImage, locationHolder)
+    let objectReturn = addListing(nameHolder, descHolder, priceHolder, selectedImage, selectedLocation, username, profilePic)
     dispatch(objectReturn)
     props.navigation.popToTop();
   }
 
-  // const textChangeHandler = (inputId, text) => {
-  //   let isValid= false;
-  //   if(text.trim().length > 0){
-  //     isValid = true;
-  //   }
-  //   dispatchFormState({type: FORM_INPUT_UPDATE, value: text, isValid: isValid, input: inputId })
-  // }
+  useEffect(() => {
+    fetchUserData()
+  }, [])
+
 
   return(
 
@@ -142,7 +144,7 @@ const NewItem = props => {
                    keyboardType="default"
                  />
               </View> */}
-              <LocationPicker />
+              <LocationPicker onLocation={locationHandler}/>
 
               <ImagePicker onImageTaken={imageHandler}/>
 

@@ -56,7 +56,7 @@ export const fetchProducts = () => {
 
 
       for (const key in resData) {
-        loadedProducts.push(new Product(key, resData[key].ownerId, 'Alfred Johnsen', resData[key].name, resData[key].imgUrl, resData[key].description, resData[key].price, resData[key].location))
+        loadedProducts.push(new Product(key, resData[key].ownerId, resData[key].seller, resData[key].name, resData[key].imgUrl, resData[key].description, resData[key].price, resData[key].location))
       }
       dispatch({ type: SET_PRODUCTS, products: loadedProducts, userProducts: loadedProducts.filter(prod => prod.userId === userId), cart: updatedCart, counter: updatedCounter, sumCart: updatedSumCart})
     } catch (err) {
@@ -112,7 +112,7 @@ export const removeFromCart = (productId) => {
   return { type: DELETE_CART, productId: productId}
 }
 
-export const addListing = (name, description, price, imgUrl, location) => {
+export const addListing = (name, description, price, imgUrl, location, seller) => {
   return async (dispatch, getState) => {
     const token = getState().auth.token
     const userId = getState().auth.userId
@@ -127,13 +127,14 @@ export const addListing = (name, description, price, imgUrl, location) => {
         name,
         ownerId: userId,
         price,
-        location
+        location,
+        seller
       })
     });
 
     const resData = await response.json();
 
-    dispatch({ type: NEW_LISTING, productId: resData.name, name: name, description: description, price: price, url: imgUrl, ownerId: userId, location: location})
+    dispatch({ type: NEW_LISTING, productId: resData.name, name: name, description: description, price: price, url: imgUrl, ownerId: userId, location: location, seller: seller})
   }
 }
 
