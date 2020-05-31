@@ -12,6 +12,7 @@ const SettingsScreen = props => {
   const fetchUserData = async () => {
     try {
         const user = await firebase.auth().currentUser;
+        console.log(user.photoURL);
         if (user != null) {
           setAvatar(user.photoURL)
         }

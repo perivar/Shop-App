@@ -11,6 +11,7 @@ import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import UserPermissions from '../components/UserPermissions'
 import * as ImagePicker from 'expo-image-picker'
+import * as firebase from 'firebase'
 
 import Input from '../components/Input'
 
@@ -47,6 +48,7 @@ const SignUpScreen = props => {
   const [value, onChangeText] = useState(null);
   const [passCheck, setPassCheck] = useState(false)
   const [avatar, setAvatar] = useState("baafal")
+  const [uploadedImage, setUploadedImage] = useState("fill")
 
   const dispatch = useDispatch()
 
@@ -79,8 +81,24 @@ const SignUpScreen = props => {
         quality: 0.5,
       });
       if (!result.cancelled) {
+        let cut = result.uri.split("ImagePicker");
+        let mid = cut[1].split("/")
+        let final = mid[1].split(".");
+        final.pop()
+        let imageName = final.join("")
         setAvatar(result.uri)
+        uploadImage(result.uri, imageName)
       }
+ }
+
+ const uploadImage = async (uri, imageName) => {
+   const response = await fetch(uri)
+   const blob = await response.blob()
+
+   var ref = firebase.storage().ref().child("profilePictures/" + imageName)
+   await ref.put(blob)
+   const url = await ref.getDownloadURL()
+   setUploadedImage(url)
  }
 
  const authHandler = async () => {
@@ -92,7 +110,7 @@ const SignUpScreen = props => {
          formState.inputValues.email,
          formState.inputValues.password,
          formState.inputValues.name,
-         avatar
+         uploadedImage
        );
      setError(null)
      setIsLoading(true)

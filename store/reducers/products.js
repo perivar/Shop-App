@@ -108,7 +108,8 @@ const productReducer = (state = initialState, action) => {
       action.url,
       action.description,
       action.price,
-      action.location)
+      action.location,
+      action.profilePic)
 
       currState.push(newProduct)
 

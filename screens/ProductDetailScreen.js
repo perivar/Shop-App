@@ -11,7 +11,6 @@ const {width,height} = Dimensions.get('window')
 
 const ProductDetailScreen = props => {
   const dispatch = useDispatch();
-
   const name = props.navigation.getParam('name')
   const price = props.navigation.getParam('price')
   const productId = props.navigation.getParam('productId')
@@ -19,7 +18,8 @@ const ProductDetailScreen = props => {
   const image = props.navigation.getParam('url')
   const description = props.navigation.getParam('description')
   const seller = props.navigation.getParam('seller')
-  const profileImageUrl = 'https://res.cloudinary.com/muhammederdem/image/upload/v1537638518/Ba%C5%9Fl%C4%B1ks%C4%B1z-1.jpg';
+  const profileImageUrl = props.navigation.getParam('profilePic')
+  console.log(profileImageUrl);
   const location = props.navigation.getParam('location')
 
   return (

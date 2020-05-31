@@ -83,7 +83,8 @@ const ProductList = props => {
               url: itemData.item.url,
               seller: itemData.item.seller,
               description: itemData.item.description,
-              location: itemData.item.location
+              location: itemData.item.location,
+              profilePic: itemData.item.profilePic
             }
           });
         }}

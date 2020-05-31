@@ -16,39 +16,25 @@ const NewItem = props => {
   const [selectedLocation, setSelectedLocation] = useState(null)
   const [username, setUsername] = useState(null)
   const [profilePic, setProfilePic] = useState(null)
+
   const currentState = useSelector(state => state.allProducts.products)
 
   const imageHandler = (imagePath) => {
     setSelectedImage(imagePath)
+    console.log(imagePath);
   }
 
   const fetchUserData = async () => {
     try {
         const user = await firebase.auth().currentUser;
         if (user != null) {
-
-          let cut = user.photoURL.split("ImagePicker");
-          let mid = cut[1].split("/")
-          let final = mid[1].split(".");
-          final.pop()
-          let imageName = final.join("")
-          uploadImage(user.photoURL,imageName)
           setUsername(user.displayName);
+          setProfilePic(user.photoURL)
         }
 
       } catch (error) {
         // Error retrieving data
       }
-  }
-
-  const uploadImage = async (uri, imageName) => {
-    const response = await fetch(uri)
-    const blob = await response.blob()
-
-    var ref = firebase.storage().ref().child("profilePictures/" + imageName)
-    await ref.put(blob)
-    const url = await ref.getDownloadURL()
-    setProfilePic(url)
   }
 
   const locationHandler = (coordinates) => {
