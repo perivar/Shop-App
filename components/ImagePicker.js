@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { AsyncStorage } from 'react-native'
+import { StackActions, NavigationActions } from 'react-navigation';
 import { View, Alert, Text, StyleSheet, ActivityIndicator, Button, Image, FlatList, TouchableOpacity } from 'react-native';
 import { useDispatch } from 'react-redux'
 import { logout } from '../store/actions/auth'
@@ -10,7 +11,23 @@ import * as firebase from 'firebase'
 import { db } from '../config';
 
 const ImgPicker = props => {
+
+  const didBlurSubscription = props.navigation.addListener(
+    'willFocus',
+    () => {
+      takeImageHandler()
+    }
+  );
+
+  const imageHandler = (imagePath) => {
+    setSelectedImage(imagePath)
+    // didBlurSubscription.remove();
+  }
+
+  const [selectedImage, setSelectedImage] = useState(null)
+  const [firstTime, setFirstTime] = useState(true)
   const [pickedImage, setPickedImage] = useState()
+
   const verifyPermissions = async () => {
     const result = await Permissions.askAsync(Permissions.CAMERA)
     if (result.status !== 'granted') {
@@ -32,7 +49,6 @@ const ImgPicker = props => {
     });
 
     if (!image.cancelled) {
-
       let cut = image.uri.split("ImagePicker");
       let mid = cut[1].split("/")
       let final = mid[1].split(".");
@@ -41,6 +57,8 @@ const ImgPicker = props => {
 
       setPickedImage(image.uri)
       uploadImage(image.uri, imageName)
+    }else{
+      props.navigation.navigate("Market")
     }
   }
 
@@ -51,12 +69,19 @@ const ImgPicker = props => {
     var ref = firebase.storage().ref().child("images/" + imageName)
     await ref.put(blob)
     const url = await ref.getDownloadURL()
-    props.onImageTaken(url)
+    setSelectedImage(url)
+    props.navigation.navigate("Form", {
+      img: selectedImage
+    })
   }
+
+  // useEffect(() => {
+  //   takeImageHandler()
+  // }, [])
 
   return (
     <View style={styles.imagePicker}>
-      <View style={styles.imagePreview}>
+      {/* <View style={styles.imagePreview}>
         {!pickedImage ?(
           <Text style={styles.text}>No image picked yet</Text>
         ) : (
@@ -64,9 +89,15 @@ const ImgPicker = props => {
         )}
 
       </View>
-      <Button onPress={takeImageHandler} title="take image"/>
+      <Button onPress={takeImageHandler} title="take image"/> */}
     </View>
   )
+}
+
+ImgPicker.navigationOptions = (data) => {
+  return{
+    headerShown: false
+  }
 }
 
 const styles = StyleSheet.create({

@@ -16,6 +16,9 @@ import ChatScreen from '../screens/ChatScreen'
 import StartScreen from '../screens/StartScreen'
 import LogInScreen from '../screens/LogInScreen'
 import SignUpScreen from '../screens/SignUpScreen'
+import PictureScreen from '../screens/PictureScreen'
+import ImagePicker from '../components/ImagePicker'
+import NewItem from '../components/NewItem'
 import AddButton from '../components/AddButton'
 
 import { createStackNavigator } from 'react-navigation-stack';
@@ -55,6 +58,15 @@ const ProfileNavigator = createStackNavigator({
   }
 })
 
+const NewListingNavigator = createStackNavigator({
+  Picture: {
+    screen: ImagePicker
+  },
+  Form: {
+    screen: NewItem
+  }
+})
+
 const OrdersNavigator = createStackNavigator({
   Orders:{
     screen:OrdersScreen
@@ -87,7 +99,7 @@ const tabScreenConfig = {
       }
     },
     Add: {
-      screen: () => null,
+      screen: NewListingNavigator,
       navigationOptions:{
         tabBarIcon: <AddButton />,
         labeled: false,
@@ -95,6 +107,7 @@ const tabScreenConfig = {
         tabBarColor: '#4baea0'
       }
     },
+
     Cart:{
       screen: OrdersNavigator,
       navigationOptions:{

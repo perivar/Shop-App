@@ -1,5 +1,5 @@
-import React, { useEffect, useCallback } from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, ImageBackground, Image, Dimensions} from 'react-native';
+import React, { useEffect, useCallback, useState} from 'react'
+import { StyleSheet, Text, View, ActivityIndicator, TouchableOpacity, ImageBackground, Image, Dimensions} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useDispatch } from 'react-redux'
@@ -10,16 +10,34 @@ import * as Animatable from 'react-native-animatable';
 const {width,height} = Dimensions.get('window')
 
 const ProductDetailScreen = props => {
+  const [isLoading, setIsLoading] = useState(false)
+  const [image, setImage] = useState()
+  const [profileImageUrl, setProfileImageUrl] = useState()
+
+  const fetchImages = async() => {
+    setIsLoading(true)
+    const image = await props.navigation.getParam('url')
+    const profileImageUrl = await props.navigation.getParam('profilePic')
+    if (profileImageUrl && image){
+      setIsLoading(false)
+      setImage(image);
+      setProfileImageUrl(profileImageUrl);
+    }
+  }
+
+  useEffect(() => {
+    fetchImages()
+  },[])
+
   const dispatch = useDispatch();
   const name = props.navigation.getParam('name')
   const price = props.navigation.getParam('price')
   const productId = props.navigation.getParam('productId')
   const user = props.navigation.getParam('user')
-  const image = props.navigation.getParam('url')
+
   const description = props.navigation.getParam('description')
   const seller = props.navigation.getParam('seller')
-  const profileImageUrl = props.navigation.getParam('profilePic')
-  console.log(profileImageUrl);
+
   const location = props.navigation.getParam('location')
 
   return (
@@ -34,15 +52,17 @@ const ProductDetailScreen = props => {
         <View style={styles.arrowWrap}>
           <MaterialIcons onPress={() => {props.navigation.navigate("Homescreen")}} name="navigate-before" color="white" size={35}/>
         </View>
-        <View style={{position: 'absolute',top: height / 20 ,bottom: 0,left: 0,right: 0, borderTopRightRadius: 30, alignItems: 'center'}}>
-          <Animatable.Image
-            animation="fadeInUpBig"
-            duration={400}
+            <View style={{position: 'absolute',top: height / 20 ,bottom: 0,left: 0,right: 0, borderTopRightRadius: 30, alignItems: 'center'}}>
+            <Animatable.Image
+            animation="fadeInUp"
+            duration={600}
+            delay={100}
             source={{uri: image}}
             style={styles.bgImg}
           >
           </Animatable.Image>
-        </View>
+              </View>
+
       <Animatable.View
         animation="slideInUp"
         duration={400}
@@ -55,7 +75,12 @@ const ProductDetailScreen = props => {
           <View style={styles.locationWrapper}>
             <MaterialIcons style={styles.locationIcon} name="location-on" size={32} color="#254053"/>
             <View style={styles.pictureWrapper}>
-              <Image source={{uri: profileImageUrl}} style={styles.profilePic} />
+              <Animatable.Image
+                animation="fadeIn"
+                duration={1000}
+                delay={100}
+                source={{uri: profileImageUrl}} 
+                style={styles.profilePic} />
             </View>
           </View>
 
@@ -202,6 +227,9 @@ const styles = StyleSheet.create({
       marginBottom: 25,
       fontSize: 16,
       opacity: .7
+    },
+    seller:{
+      marginLeft: 10,
     },
     locationIcon:{
       marginLeft: 6,

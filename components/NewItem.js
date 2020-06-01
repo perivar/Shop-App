@@ -10,19 +10,13 @@ import Geocoder from 'react-native-geocoding';
 import * as firebase from 'firebase'
 
 const NewItem = props => {
-
+  console.log(props.navigation.getParam("img"));
   const dispatch = useDispatch()
-  const [selectedImage, setSelectedImage] = useState(null)
   const [selectedLocation, setSelectedLocation] = useState(null)
   const [username, setUsername] = useState(null)
   const [profilePic, setProfilePic] = useState(null)
 
   const currentState = useSelector(state => state.allProducts.products)
-
-  const imageHandler = (imagePath) => {
-    setSelectedImage(imagePath)
-    console.log(imagePath);
-  }
 
   const fetchUserData = async () => {
     try {
@@ -63,19 +57,10 @@ const NewItem = props => {
     fetchUserData()
   }, [])
 
-
   return(
-
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-    >
       <View style={styles.compWrapper}>
-        <View style={styles.container}>
           <View style={styles.card}>
-            <ScrollView>
-              <Text style={styles.title}>
-                Your New Product!
-              </Text>
+            <ScrollView style={{flex:1, width: '100%', height: '100%'}}>
               <View style={styles.nameWrapper}>
                 <Text style={styles.text}>
                   Title
@@ -117,22 +102,7 @@ const NewItem = props => {
                  />
               </View>
 
-              {/* <View style={styles.locWrap}>
-                <Text style={styles.text}>
-                  Location
-                </Text>
-                <TextInput
-                   style = {styles.input}
-                   onChangeText={text => setLocationHolder(text)}
-                   selectionColor = "#9a73ef"
-                   placeholder="Where is it sold?"
-                   textAlign="left"
-                   keyboardType="default"
-                 />
-              </View> */}
               <LocationPicker onLocation={locationHandler}/>
-
-              <ImagePicker onImageTaken={imageHandler}/>
 
               <View style={styles.pricewrapper}>
                 <TouchableOpacity style={styles.submitWrapper} onPress={submitChanges}>
@@ -141,24 +111,17 @@ const NewItem = props => {
               </View>
               </ScrollView>
             </View>
-          </View>
         </View>
-      </KeyboardAvoidingView>
   )
 }
 
 const styles = StyleSheet.create({
-  container:{
-    flex:1,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   compWrapper:{
     flex:1,
+    width: '100%',
     flexDirection: 'row',
     // backgroundColor: 'blue',
-    marginVertical: 15
+    // marginVertical: 15
     // flexDirection: 'column',
     // justifyContent:'center',
   },
@@ -167,9 +130,10 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     backgroundColor: '#f5f5f5',
-    width:'90%',
-    height: '90%',
-    padding: 25,
+    width:'100%',
+    height: '100%',
+    paddingHorizontal: 10,
+    paddingTop: 20,
     borderRadius: 5,
     overflow: 'hidden',
     shadowColor: "#000",

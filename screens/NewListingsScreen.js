@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity} from 'react
 import NewItem from '../components/NewItem'
 
 const NewListingsScreen = props => {
+  console.log(props);
   return (
     <NewItem navigation={props.navigation}/>
   )

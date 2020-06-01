@@ -185,6 +185,8 @@ const styles = StyleSheet.create({
     flex:1,
     flexDirection: 'column',
     alignItems: 'center',
+    width: '100%',
+    height: '100%',
     backgroundColor: '#F5E9EA',
   },
   header:{
