@@ -35,23 +35,20 @@ const LocationPicker = props => {
 
   return (
     <View style={styles.locationPicker}>
+      <Button title="Get location" onPress={getUserLocation}/>
       <View style={styles.mapPreview}>
         {isFetching ? <ActivityIndicator size="large"/> : <Text>No location chosen</Text>}
       </View>
-
-      <Button title="Get location" onPress={getUserLocation}/>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
   locationPicker:{
-    alignItems: 'center'
+    alignItems: 'center',
+    marginVertical: 10,
   },
   mapPreview:{
-    width: '100%',
-    height: 200,
-    marginBottom: 10,
     justifyContent: 'center',
     alignItems: 'center',
     borderColor: '#ccc',

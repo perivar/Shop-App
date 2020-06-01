@@ -7,6 +7,7 @@ import { logout } from '../store/actions/auth'
 import * as ImagePicker from 'expo-image-picker'
 import * as Permissions from 'expo-permissions'
 import * as firebase from 'firebase'
+import * as Progress from 'react-native-progress';
 
 import { db } from '../config';
 
@@ -26,6 +27,7 @@ const ImgPicker = props => {
 
   const [selectedImage, setSelectedImage] = useState(null)
   const [firstTime, setFirstTime] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
   const [pickedImage, setPickedImage] = useState()
 
   const verifyPermissions = async () => {
@@ -63,6 +65,7 @@ const ImgPicker = props => {
   }
 
   const uploadImage = async (uri, imageName) => {
+    setIsLoading(true)
     const response = await fetch(uri)
     const blob = await response.blob()
 
@@ -70,8 +73,9 @@ const ImgPicker = props => {
     await ref.put(blob)
     const url = await ref.getDownloadURL()
     setSelectedImage(url)
+    setIsLoading(false)
     props.navigation.navigate("Form", {
-      img: selectedImage
+      img: url
     })
   }
 
@@ -81,7 +85,16 @@ const ImgPicker = props => {
 
   return (
     <View style={styles.imagePicker}>
-      {/* <View style={styles.imagePreview}>
+      {isLoading ? (
+        <View style={styles.imagePreview}>
+          <Text style={{marginBottom: 30}}>
+            Loading....
+          </Text>
+          {/* <Progress.Bar progress={1} width={200} color={['red', 'green', 'blue']}/> */}
+          <ActivityIndicator size="large" color="#3c8b80"/>
+        </View>
+      ): (<View></View>)}
+       {/* <View style={styles.imagePreview}>
         {!pickedImage ?(
           <Text style={styles.text}>No image picked yet</Text>
         ) : (
@@ -89,7 +102,7 @@ const ImgPicker = props => {
         )}
 
       </View>
-      <Button onPress={takeImageHandler} title="take image"/> */}
+      <Button onPress={takeImageHandler} title="take image"/>  */}
     </View>
   )
 }
@@ -102,16 +115,13 @@ ImgPicker.navigationOptions = (data) => {
 
 const styles = StyleSheet.create({
   imagePicker:{
+    flex:1,
+    justifyContent: 'center',
     alignItems: 'center'
   },
   imagePreview:{
-    width: '100%',
-    height: 200,
-    marginBottom: 10,
-    justifyContent: 'center',
     alignItems: 'center',
-    borderColor: '#ccc',
-    borderWidth: 1
+    justifyContent: 'center'
   },
   image:{
     width: '100%',
