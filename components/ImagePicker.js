@@ -85,24 +85,17 @@ const ImgPicker = props => {
 
   return (
     <View style={styles.imagePicker}>
-      {isLoading ? (
+      {/* {isLoading ? (
         <View style={styles.imagePreview}>
           <Text style={{marginBottom: 30}}>
             Loading....
           </Text>
-          {/* <Progress.Bar progress={1} width={200} color={['red', 'green', 'blue']}/> */}
           <ActivityIndicator size="large" color="#3c8b80"/>
         </View>
-      ): (<View></View>)}
-       {/* <View style={styles.imagePreview}>
-        {!pickedImage ?(
-          <Text style={styles.text}>No image picked yet</Text>
-        ) : (
-          <Image style={styles.image} source={{uri: pickedImage}}/>
-        )}
-
+      ): (<View></View>)} */}
+       <View style={styles.imagePreview}>
       </View>
-      <Button onPress={takeImageHandler} title="take image"/>  */}
+      <Button onPress={takeImageHandler} title="take image"/>
     </View>
   )
 }
