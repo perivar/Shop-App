@@ -79,7 +79,7 @@ const ProductDetailScreen = props => {
                 animation="fadeIn"
                 duration={1000}
                 delay={100}
-                source={{uri: profileImageUrl}} 
+                source={{uri: profileImageUrl}}
                 style={styles.profilePic} />
             </View>
           </View>
@@ -230,6 +230,9 @@ const styles = StyleSheet.create({
     },
     seller:{
       marginLeft: 10,
+      opacity: 0.6,
+      fontSize: 14,
+      fontWeight: 'bold'
     },
     locationIcon:{
       marginLeft: 6,

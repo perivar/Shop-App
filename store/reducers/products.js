@@ -33,6 +33,7 @@ const productReducer = (state = initialState, action) => {
         const updatedCounter = [...state.counter]
         updatedCounter[objIndex].number += 1
         const price = productToAdd.price;
+        console.log(price);
 
         return {...state, counter: updatedCounter, sumCart: state.sumCart += price}
       }

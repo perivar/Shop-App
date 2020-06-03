@@ -55,6 +55,9 @@ const ProfileNavigator = createStackNavigator({
   },
   NewListing:{
     screen: NewListingsScreen
+  },
+  Form: {
+    screen: NewItem
   }
 })
 
@@ -62,9 +65,6 @@ const NewListingNavigator = createStackNavigator({
   Picture: {
     screen: ImagePicker
   },
-  Form: {
-    screen: NewItem
-  }
 })
 
 const OrdersNavigator = createStackNavigator({
@@ -101,7 +101,9 @@ const tabScreenConfig = {
     Add: {
       screen: NewListingNavigator,
       navigationOptions:{
-        tabBarIcon: <AddButton />,
+        tabBarIcon: () => {
+          return <AddButton />
+        } ,
         labeled: false,
         // shifting: false,
         tabBarColor: '#4baea0'

@@ -1,5 +1,5 @@
-import React from 'react'
-import { View, Image, Text, StyleSheet, Dimensions, Button, FlatList, TouchableOpacity, Platform, TouchableNativeFeedback, ImageBackground, Alert } from 'react-native';
+import React, { useState } from 'react'
+import { View, Image, Text, Animated, StyleSheet, Dimensions, Button, FlatList, TouchableOpacity, Platform, TouchableNativeFeedback, ImageBackground, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useDispatch } from 'react-redux'
@@ -10,12 +10,16 @@ import * as Animatable from 'react-native-animatable';
 const {width,height} = Dimensions.get('window')
 
 const YourProduct = props => {
-  const deleteHandler = (productToDelete) => {
+
+  const [animation, setAnimation] = useState()
+
+  const deleteHandler = (productToDelete) => { 
     Alert.alert(
       props.name,
       'Are your sure you want to delete ' + props.name + '?',
       [
-        {text: 'Yes', style: 'destructive' ,onPress: () => {
+        {text: 'Yes', style: 'destructive' ,onPress: async() => {
+          await fadeoutItem()
           let objReturn = removeListing(productToDelete);
           dispatch(objReturn);
         }},
@@ -23,6 +27,10 @@ const YourProduct = props => {
       ],
       { cancelable: true }
     )
+  }
+
+  const fadeoutItem = () => {
+    setAnimation("fadeOutLeft")
   }
 
   const dispatch = useDispatch()
@@ -50,18 +58,21 @@ const YourProduct = props => {
         </View>
 
         <View style={styles.bottom}>
-            <TouchableOpacity style={styles.leftBottom} onPress={() => {
+            <TouchableOpacity
+              animation={animation}
+              style={styles.leftBottom}
+              onPress={() => {
               const productId = props.onDeleteProduct();
               deleteHandler(productId)
             }}>
-              <MaterialIcons style={styles.trashIcon} name="delete-forever" size={25} color="#254053" />
+              <MaterialIcons style={styles.trashIcon} name="delete-forever" size={25}/>
               <Text style={styles.removeText}>
                 REMOVE
               </Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.rightBottom} onPress={props.onSelectProduct}>
-              <MaterialIcons style={styles.trashIcon} name="mode-edit" size={20} color="#254053" />
+              <MaterialIcons style={styles.trashIcon} name="mode-edit" size={20}/>
               <Text style={styles.productText}>
                 EDIT LISTING
               </Text>

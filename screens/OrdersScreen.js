@@ -15,7 +15,6 @@ const OrderScreen = props => {
 
   useEffect(() => {
     const result = fetchCart()
-    // console.log(result);
   })
 
   const productsInCart = useSelector(state => state.allProducts.cart);
@@ -110,7 +109,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#c6f1e7',
   },
   priceSummary:{
-    flex:1
+    flex:1,
+    backgroundColor: '#F5E9EA'
   },
   textWrapper:{
     flexDirection: 'column',

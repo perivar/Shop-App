@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { AsyncStorage } from 'react-native'
 import { StackActions, NavigationActions } from 'react-navigation';
 import { View, Alert, Text, StyleSheet, ActivityIndicator, Button, Image, FlatList, TouchableOpacity } from 'react-native';
@@ -12,13 +12,18 @@ import * as Progress from 'react-native-progress';
 import { db } from '../config';
 
 const ImgPicker = props => {
+  const didBlurSubscription = useEffect(() => {
+    props.navigation.addListener(
+      'willFocus',
+        () => {
+        takeImageHandler()
+      }
+    );
+  },[])
 
-  const didBlurSubscription = props.navigation.addListener(
-    'willFocus',
-    () => {
-      takeImageHandler()
-    }
-  );
+  useEffect(() => {
+    takeImageHandler()
+  }, [])
 
   const imageHandler = (imagePath) => {
     setSelectedImage(imagePath)
@@ -57,15 +62,15 @@ const ImgPicker = props => {
       final.pop()
       let imageName = final.join("")
 
-      setPickedImage(image.uri)
-      uploadImage(image.uri, imageName)
+      await setPickedImage(image.uri)
+      await uploadImage(image.uri, imageName)
     }else{
       props.navigation.navigate("Market")
     }
   }
 
   const uploadImage = async (uri, imageName) => {
-    setIsLoading(true)
+    await setIsLoading(true)
     const response = await fetch(uri)
     const blob = await response.blob()
 
@@ -85,17 +90,17 @@ const ImgPicker = props => {
 
   return (
     <View style={styles.imagePicker}>
-      {/* {isLoading ? (
+      {isLoading ? (
         <View style={styles.imagePreview}>
           <Text style={{marginBottom: 30}}>
             Loading....
           </Text>
           <ActivityIndicator size="large" color="#3c8b80"/>
         </View>
-      ): (<View></View>)} */}
-       <View style={styles.imagePreview}>
-      </View>
-      <Button onPress={takeImageHandler} title="take image"/>
+      ): (<View></View>)}
+       {/* <View style={styles.imagePreview}>
+      </View> */}
+      {/* <Button onPress={takeImageHandler} title="take image"/> */}
     </View>
   )
 }

@@ -9,7 +9,7 @@ const CartItem = props =>  {
   const dispatch = useDispatch()
 
   const cart = useSelector(state => state.allProducts.cart)
-  
+
   const numberOfProduct = useSelector(state => state.allProducts.counter)
   const findProduct = numberOfProduct.find(product => product.product === props.id)
   return (
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
  },
  itemContainer:{
    flexDirection: 'column',
-   backgroundColor: '#f5f5f5',
+  backgroundColor: '#fbf7f7',
    height: 200,
    paddingTop: 23,
    paddingHorizontal: 23,
@@ -167,16 +167,19 @@ const styles = StyleSheet.create({
    opacity: 0.6,
    marginLeft: 5,
    fontSize: 14,
-   color: '#254053'
+   color: '#254053',
+   fontWeight: 'bold'
  },
  trashIcon:{
-   opacity: 0.6
+   opacity: 0.6,
+   color: '#e56767',
  },
  productText:{
    opacity: 0.6,
    marginRight: 5,
    fontSize: 14,
-   color: '#254053'
+   color: '#254053',
+   fontWeight: 'bold'
  },
  rightBottom:{
    flex:1,
