@@ -9,8 +9,6 @@ import * as Permissions from 'expo-permissions'
 import * as firebase from 'firebase'
 import * as Progress from 'react-native-progress';
 
-import { db } from '../config';
-
 const ImgPicker = props => {
   const didBlurSubscription = useEffect(() => {
     props.navigation.addListener(

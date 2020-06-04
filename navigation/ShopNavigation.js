@@ -13,6 +13,7 @@ import PlacedOrderScreen from '../screens/PlacedOrderScreen'
 import AuthScreen from '../screens/AuthScreen'
 import StartUpScreen from '../screens/StartUpScreen'
 import ChatScreen from '../screens/ChatScreen'
+import ChatListScreen from '../screens/ChatListScreen'
 import StartScreen from '../screens/StartScreen'
 import LogInScreen from '../screens/LogInScreen'
 import SignUpScreen from '../screens/SignUpScreen'
@@ -41,7 +42,10 @@ const ShopNavigator = createStackNavigator({
 });
 
 const ChatNav = createStackNavigator({
-  Chat: {
+  List: {
+    screen: ChatListScreen,
+  },
+  Chats: {
     screen: ChatScreen
   },
 });

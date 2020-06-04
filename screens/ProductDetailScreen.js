@@ -2,27 +2,50 @@ import React, { useEffect, useCallback, useState} from 'react'
 import { StyleSheet, Text, View, ActivityIndicator, TouchableOpacity, ImageBackground, Image, Dimensions} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { useDispatch } from 'react-redux'
 import { addToCart } from '../store/actions/products'
 import Card from '../components/Card'
 import * as Animatable from 'react-native-animatable';
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 const {width,height} = Dimensions.get('window')
 
 const ProductDetailScreen = props => {
+  // console.log(props);
   const [isLoading, setIsLoading] = useState(false)
   const [image, setImage] = useState()
   const [profileImageUrl, setProfileImageUrl] = useState()
+  const [userId, setUserId] = useState()
+  const [showAlert, setShowAlert] = useState(false)
 
   const fetchImages = async() => {
     setIsLoading(true)
     const image = await props.navigation.getParam('url')
     const profileImageUrl = await props.navigation.getParam('profilePic')
+    const userId = await props.navigation.getParam('uid')
+
     if (profileImageUrl && image){
       setIsLoading(false)
       setImage(image);
       setProfileImageUrl(profileImageUrl);
+      setUserId(userId)
     }
+  }
+
+  const popAlert = () => {
+    setShowAlert(true)
+  }
+
+  const hideAlert = () => {
+    setShowAlert(false)
+  }
+
+  const handleSendMessage = async () => {
+    await hideAlert()
+    props.navigation.navigate("Chats", {
+      uid: userId
+    })
   }
 
   useEffect(() => {
@@ -30,10 +53,10 @@ const ProductDetailScreen = props => {
   },[])
 
   const dispatch = useDispatch();
+
   const name = props.navigation.getParam('name')
   const price = props.navigation.getParam('price')
   const productId = props.navigation.getParam('productId')
-  const user = props.navigation.getParam('user')
 
   const description = props.navigation.getParam('description')
   const seller = props.navigation.getParam('seller')
@@ -62,7 +85,6 @@ const ProductDetailScreen = props => {
           >
           </Animatable.Image>
               </View>
-
       <Animatable.View
         animation="slideInUp"
         duration={400}
@@ -74,6 +96,7 @@ const ProductDetailScreen = props => {
         <View style={styles.middleSection}>
           <View style={styles.locationWrapper}>
             <MaterialIcons style={styles.locationIcon} name="location-on" size={32} color="#254053"/>
+            <TouchableOpacity onPress={popAlert}>
             <View style={styles.pictureWrapper}>
               <Animatable.Image
                 animation="fadeIn"
@@ -82,13 +105,17 @@ const ProductDetailScreen = props => {
                 source={{uri: profileImageUrl}}
                 style={styles.profilePic} />
             </View>
+          </TouchableOpacity>
           </View>
+
 
           <View style={styles.profileWrapper}>
               <Text style={styles.location}>
                 {location}
               </Text>
+              <TouchableOpacity onPress={popAlert} style={{ width: width / 3.5}}>
                 <Text style={styles.seller}>{seller}</Text>
+              </TouchableOpacity>
           </View>
         </View>
           <TouchableOpacity
@@ -102,6 +129,30 @@ const ProductDetailScreen = props => {
             <MaterialIcons name="navigate-next" size={26} color="white"/>
           </TouchableOpacity>
       </Animatable.View>
+      <AwesomeAlert
+        show={showAlert}
+        showProgress={false}
+        alertContainerStyle={{zIndex: 1000}}
+        title={<Ionicons name="ios-chatbubbles" size={50} />}
+        titleStyle={{fontSize: 30}}
+        messageStyle={{fontSize: 15}}
+        cancelButtonStyle={{marginRight: 5, paddingVertical: 15, paddingHorizontal: 25}}
+        confirmButtonStyle={{marginLeft: 5, paddingVertical: 15, paddingHorizontal: 20}}
+        cancelButtonTextStyle={{fontSize: 16}}
+        confirmButtonTextStyle={{fontSize: 16}}
+        message={"Send a message to " + seller + " ?"}
+        closeOnTouchOutside={false}
+        closeOnHardwareBackPress={false}
+        showCancelButton={true}
+        showConfirmButton={true}
+        cancelText="Go back"
+        confirmText={"Yes, lets chat!"}
+        confirmButtonColor="#e56767"
+        onCancelPressed={() => {
+          hideAlert();
+        }}
+        onConfirmPressed={handleSendMessage}
+      />
     </View>
 )}
 

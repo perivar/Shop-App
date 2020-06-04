@@ -11,8 +11,6 @@ import UserPermissions from './UserPermissions'
 import { MaterialIcons } from '@expo/vector-icons';
 import Geocoder from 'react-native-geocoding';
 
-import { db } from '../config';
-
 const LocationPicker = props => {
 
   const [isFetching, setIsFetching] = useState(false)

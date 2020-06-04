@@ -79,12 +79,12 @@ const ProductList = props => {
               productId: itemData.item.id,
               name: itemData.item.name,
               price: itemData.item.price,
-              user: itemData.item.userId,
+              uid: itemData.item.userId,
               url: itemData.item.url,
               seller: itemData.item.seller,
               description: itemData.item.description,
               location: itemData.item.location,
-              profilePic: itemData.item.profilePic
+              profilePic: itemData.item.profilePic,
             }
           });
         }}
