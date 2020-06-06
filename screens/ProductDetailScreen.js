@@ -24,6 +24,7 @@ const ProductDetailScreen = props => {
     const image = await props.navigation.getParam('url')
     const profileImageUrl = await props.navigation.getParam('profilePic')
     const userId = await props.navigation.getParam('uid')
+    const seller = await props.navigation.getParam('seller')
 
     if (profileImageUrl && image){
       setIsLoading(false)
@@ -44,7 +45,9 @@ const ProductDetailScreen = props => {
   const handleSendMessage = async () => {
     await hideAlert()
     props.navigation.navigate("Chats", {
-      uid: userId
+      uid: userId,
+      img: profileImageUrl,
+      seller: seller
     })
   }
 

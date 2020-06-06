@@ -21,6 +21,14 @@ class Fire {
     return (firebase.auth().currentUser || {}).uid;
   }
 
+  get img() {
+    return (firebase.auth().currentUser || {}).photoURL;
+  }
+
+  get name() {
+    return (firebase.auth().currentUser || {}).displayName;
+  }
+
   get ref() {
     return firebase.database().ref('messages');
   }
@@ -31,7 +39,7 @@ class Fire {
     const timestamp = new Date(numberStamp);
     const message = {
       _id,
-      timestamp,
+      createdAt: timestamp,
       text,
       user,
     };

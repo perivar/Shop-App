@@ -127,6 +127,8 @@ const ProductList = props => {
               left: 0,
               right: 0,
               top: 0,
+              borderBottomLeftRadius: 100,
+              borderBottomRightRadius: 100,
               height: headerHeight,
               backgroundColor: '#c6f1e7',
               zIndex: 1000,

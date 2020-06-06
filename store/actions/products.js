@@ -37,6 +37,40 @@ export const fetchOrders = () => {
   }
 }
 
+export const fetchMessages = (user2, user, userImg) => {
+  return async (dispatch, getState) => {
+    try {
+      const response = await fetch(`https://rental-app-743c0.firebaseio.com/chats/${user}/${user2}.json`);
+    if (!response.ok) {
+      throw new Error('Something went wrong');
+    }
+
+    const resData = await response.json();
+
+    const loadedMessages = [];
+    // console.log(text);
+
+    for (const key in resData) {
+      const text = resData[key].text
+      console.log(text);
+      console.log(key);
+    }
+    for (let value of Object.values(resData)) {
+      // console.log(value);
+      const text = value.text
+      // const timestamp = Object.keys(resData)[0];
+      // console.log(timestamp);
+    //   loadedOrders.push(new Order(
+    //     key, resData[key].cartItems, resData[key].totalAmount, new Date(resData[key].date)
+    //   )
+    // )
+    }
+    }catch (err) {
+          throw err;
+      }
+  }
+}
+
 export const fetchProducts = () => {
     return async (dispatch, getState) => {
       const updatedCart = getState().allProducts["cart"].map(prod => prod);

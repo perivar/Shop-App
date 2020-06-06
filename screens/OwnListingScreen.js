@@ -93,13 +93,13 @@ const OwnListing = props => {
 OwnListing.navigationOptions = (data) => {
   return{
     headerTitle: 'Your Listings',
-    headerRight: (
-      <HeaderButtons HeaderButtonComponent={HeaderButton}>
-        <Item title="ios-add" iconName="ios-add-circle-outline" onPress={() => {
-          data.navigation.navigate('NewListing')
-        }} />
-      </HeaderButtons>
-    ),
+    // headerRight: (
+    //   <HeaderButtons HeaderButtonComponent={HeaderButton}>
+    //     <Item title="ios-add" iconName="ios-add-circle-outline" onPress={() => {
+    //       data.navigation.navigate('NewListing')
+    //     }} />
+    //   </HeaderButtons>
+    // ),
     headerStyle: {
       backgroundColor: '#c6f1e7',
       shadowRadius: 0,
@@ -123,6 +123,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#c6f1e7',
     height: 60,
+    borderBottomLeftRadius: 1000,
+    borderBottomRightRadius: 1000,
   },
   leftTop:{
     flex:1,
