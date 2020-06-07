@@ -10,6 +10,8 @@ import * as firebase from 'firebase'
 import * as Progress from 'react-native-progress';
 import * as Animatable from 'react-native-animatable';
 import { MaterialIcons } from '@expo/vector-icons';
+import { db } from '../config'
+import ChatItem from '../components/ChatItem'
 
 const {width,height} = Dimensions.get('window')
 const headerHeight = Platform.OS == 'ios' ? 120 : 70+StatusBar;
@@ -20,16 +22,43 @@ const headerY = Animated.interpolate(scrollY, {
 })
 const height_logo = height * 0.4 * 0.4
 
+var database = firebase.database();
+
 const ChatList = props => {
   const [user, setUser] = useState()
+  const [user2, setUser2] = useState()
+  const [user2Img, setUser2Img] = useState()
   const [animationState, setAnimationState] = useState("fadeInDown")
+  const [user2Id, setUser2Id] = useState()
+  const [chats, setChats] = useState([])
 
   const fetchUserData = async () => {
     try {
         const user = await firebase.auth().currentUser;
         if (user != null) {
-          // console.log(user);
-          setUser(user);
+          setUser(user.uid);
+          await firebase.database().ref("messages" + '/' + user.uid).once("value")
+          .then(function(snapshot) {
+
+            for (var key in snapshot.val()) {
+              const obj = snapshot.val()[key]
+              let name = null
+              let img = null
+              for (var keys in obj){
+                name = obj[keys].name;
+                img = obj[keys].img
+              }
+              setChats(oldArray => [...oldArray, [key, name, img]])
+            }
+
+            const user2 = Object.values(snapshot.val())[0];
+            const user2UserId = Object.keys(snapshot.val())[0];
+            const image = Object.values(user2)[0].img;
+            const name = Object.values(user2)[0].name;
+            setUser2(name)
+            setUser2Img(image)
+            setUser2Id(user2UserId)
+          });
         }
 
       } catch (error) {
@@ -39,9 +68,24 @@ const ChatList = props => {
 
   const handlePress = () => {
     props.navigation.navigate("Chats", {
-      name: "Ida Emilie"
+      uid: user2Id,
     })
   }
+
+  const renderProducts = (itemData) => {
+    return(
+       <ChatItem
+        name={itemData.item[1]}
+        img={itemData.item[2]}
+        uid={itemData.item[0]}
+        handlePress={() => {
+          props.navigation.navigate("Chats", {
+            uid: itemData.item[0],
+          })
+        }}
+        />
+    );
+  };
 
   useEffect(() => {
     fetchUserData()
@@ -76,23 +120,21 @@ const ChatList = props => {
          <View style={styles.header}>
          </View>
        </Animated.View>
-      <View style={{flex:1, top: headerHeight + 30}}>
-        <TouchableOpacity
-          onPress={handlePress}
-          style={{height: height / 12, backgroundColor: '#fbf7f7', borderRadius: 100, marginHorizontal: 20, flexDirection: 'row'}}>
-          <View style={{justifyContent: 'center'}}>
-            <Image
-              style={{width: 70, height: height / 12, borderRadius: 100}}
-              source={{uri: 'https://firebasestorage.googleapis.com/v0/b/rental-app-743c0.appspot.com/o/profilePictures%2F799482BE-12C0-4AAF-B26F-CD28DD5F0BDC?alt=media&token=b3e207eb-847f-46f5-93c8-aac8d0246281'}} />
-          </View>
-          <View style={{justifyContent: 'center', paddingLeft: 30}}>
-            <Text style={{fontSize: 18, fontWeight: 'bold'}}>Ida Emilie</Text>
-          </View>
-          <View style={{justifyContent: 'center', marginLeft: 100}}>
-            <MaterialIcons name="navigate-next" size={26} color="black"/>
-          </View>
-        </TouchableOpacity>
-      </View>
+       <FlatList
+         contentContainerStyle={{ flex:1, marginTop: headerHeight}}
+         scrollEventThrottle={16}
+       //   onScroll={Animated.event([
+       //     {
+       //     nativeEvent: { contentOffset: { y: scrollY }}
+       //     }
+       // ],{ useNativeDriver: true })}
+         // onRefresh={loadProducts}
+         // refreshing={isRefreshing}
+         numColumns={1}
+         data={chats}
+         renderItem={renderProducts}
+         keyExtractor={(item, index) => item.id}
+       />
       <Text>
       </Text>
     </View>

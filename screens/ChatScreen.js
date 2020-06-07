@@ -1,254 +1,67 @@
-// import React from 'react';
-// import { GiftedChat, Bubble } from 'react-native-gifted-chat'; // 0.3.0
-// import { View, TextInput, SafeAreaView, Alert, Text, Dimensions, StatusBar, StyleSheet, ActivityIndicator, Button, Image, FlatList, TouchableOpacity } from 'react-native';
-// import * as Animatable from 'react-native-animatable';
-// import Animated, { Easing } from 'react-native-reanimated';
-//
-// const {width,height} = Dimensions.get('window')
-//
-// export default class ChatScreen extends React.Component {
-//
-//   constructor(props){
-//     super(props);
-//     this.state = {
-//       person : {
-//
-//       }
-//       textMessage: ''
-//     }
-//   }
-//
-//   handleChange = (key) => val => {
-//     this.setState({ [key]: val })
-//   }
-//
-//   sendMessage = async () => {
-//
-//       // let msgId = firebase.database().ref("messages").child()
-//   }
-//
-//   render(){
-//     return(
-//       <SafeAreaView>
-//         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-//           <TextInput
-//           style={styles.input}
-//           value={this.state.textMessage}
-//           placeHolder="Type message.."
-//           onChangeText={this.handleChange('textMessage')}
-//           />
-//           <TouchableOpacity onPress={this.sendMessage}>
-//             <Text style={styles.btntext}>Send</Text>
-//           </TouchableOpacity>
-//         </View>
-//       </SafeAreaView>
-//     )
-//   }
-// }
-//
-// const styles = StyleSheet.create({
-//   btntext: {
-//     fontSize: 20
-//   },
-//   input:{
-//     padding: 20,
-//     borderWidth: 1,
-//     borderColor: "#ccc",
-//     width: width / 1.3,
-//     marginVertical: 20,
-//     borderRadius: 20
-//   }
-// })
-
-
-
-
-// import Fire from '../Fire';
-//
-// type Props = {
-//   name?: string,
-// };
-//
-// const {width,height} = Dimensions.get('window')
-// const headerHeight = Platform.OS == 'ios' ? 100 : 70 + StatusBar;
-// const scrollY = new Animated.Value(0)
-// const headerY = Animated.interpolate(scrollY, {
-//   inputRange:[0, headerHeight],
-//   outputRange:[0,-headerHeight]
-// })
-// const height_logo = height * 0.4 * 0.4
-//
-// class Chat extends React.Component<Props> {
-//
-//   state = {
-//     messages: [],
-//     name: null
-//   };
-//
-//   get user() {
-//     return {
-//       _id: Fire.shared.uid,
-//       name: Fire.shared.name,
-//       avatar: Fire.shared.img,
-//     };
-//   }
-//
-//   renderBubble(props){
-//     return (
-//       <Bubble
-//         {...props}
-//         wrapperStyle={{
-//           right: {
-//             backgroundColor: '#44bda1'
-//           },
-//           left: {
-//             backgroundColor: '#fcf3f5'
-//           }
-//         }}
-//       />
-//     )
-//   }
-//
-//   render() {
-//     return (
-//       <View style={{flex:1, backgroundColor: '#F5E9EA'}}>
-//         <Animated.View
-//           style={{
-//             position: 'absolute',
-//             flexDirection: 'row',
-//             left: 0,
-//             right: 0,
-//             top: 0,
-//             borderBottomLeftRadius: 100,
-//             borderBottomRightRadius: 100,
-//             height: headerHeight,
-//             backgroundColor: '#c6f1e7',
-//             zIndex: 1000,
-//             elevation:1000,
-//             transform: [{ translateY: headerY }],
-//             alignItems: 'center',
-//             justifyContent: 'center',
-//           }}
-//          >
-//            <Animatable.Text
-//              animation={"fadeInDown"}
-//              duration={900}
-//              style={styles.welcomeText}>
-//              Macbookzzz
-//           </Animatable.Text>
-//            <View style={styles.header}>
-//            </View>
-//          </Animated.View>
-//         <GiftedChat
-//           messages={this.state.messages}
-//           onSend={Fire.shared.send}
-//           user={this.user}
-//           renderBubble={this.renderBubble}
-//         />
-//       </View>
-//
-//     );
-//   }
-//
-//   componentDidMount() {
-//     Fire.shared.on(message =>
-//       this.setState(previousState => ({
-//         messages: GiftedChat.append(previousState.messages, message),
-//       }))
-//     );
-//   }
-//   componentWillUnmount() {
-//     Fire.shared.off();
-//   }
-// }
-//
-// Chat.navigationOptions = (data) => {
-//   return{
-//     headerShown: false
-//   }
-// }
-//
-// const styles = StyleSheet.create({
-//   screen:{
-//     flex:1,
-//     flexDirection: 'column',
-//     alignItems: 'center',
-//     width: '100%',
-//     height: '100%',
-//     backgroundColor: '#F5E9EA',
-//   },
-//   header:{
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     marginBottom: headerHeight + height_logo / 3,
-//     shadowColor: "#8aa8a1",
-//     shadowRadius: 5,
-//     shadowOffset: {height:5},
-//     shadowOpacity: 0.2,
-//     paddingTop: 30
-//   },
-//   logo:{
-//     top:height / 6,
-//     width: height_logo,
-//     height: height_logo,
-//     borderRadius: height_logo / 2,
-//   },
-//   welcomeText:{
-//     flex:1,
-//     textAlign: 'center',
-//     width: '100%',
-//     fontSize: width / 20,
-//     fontWeight: 'bold',
-//     opacity: 1,
-//     color: '#254053',
-//     top: 55,
-//     left: 0,
-//     position: 'absolute'
-//   }
-// })
-//
-// export default Chat;
-
-import React, { useState, useEffect, useCallback, useMemo } from 'react'
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { AsyncStorage } from 'react-native'
 import { StackActions, NavigationActions } from 'react-navigation';
-import { View, Alert, Dimensions, TextInput, SafeAreaView, Text, StyleSheet, ActivityIndicator, Button, Image, FlatList, TouchableOpacity } from 'react-native';
+import { View, Animated, Alert, Platform, Keyboard, Dimensions, TextInput, KeyboardAvoidingView, Text, StyleSheet, ActivityIndicator, Button, Image, FlatList, TouchableOpacity } from 'react-native';
 import { useDispatch } from 'react-redux'
 import { logout } from '../store/actions/auth'
 import * as Permissions from 'expo-permissions'
 import * as firebase from 'firebase'
 import * as Progress from 'react-native-progress';
 import { fetchMessages } from '../store/actions/products'
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import * as Animatable from 'react-native-animatable';
 import { db } from '../config'
 
 var database = firebase.database();
 
 const {width,height} = Dimensions.get('window')
 
+const isIOS = Platform.OS === 'ios'
+
 const ChatScreen= props => {
 
   const dispatch = useDispatch()
 
   const [user, setUser] = useState()
+  const [userName, setUserName] = useState()
+  const [userPic, setUserPic] = useState()
   const [userMessageTo, setUserMessageTo] = useState()
-  const [messages, setMessages] = useState([])
   const [sellerName, setSellerName] = useState()
   const [sellerPic, setSellerPic] = useState()
+
+  const [messages, setMessages] = useState([])
   const [messageText, setMessage] = useState()
   const [messageList, setMessageList] = useState([])
+
+  const keyboardHeight = useRef(new Animated.Value(0)).current;
+  const bottomPadding = useRef(new Animated.Value(60)).current;
+  const listRef = useRef(null);
 
   const sendMessage = async () => {
     if( messageText.length > 0 ){
       let msgId = firebase.database().ref("messages").child(user).child(userMessageTo).push().key
       let updates = {}
+
       let message ={
+        name: sellerName,
+        img: sellerPic,
         message: messageText,
         time: firebase.database.ServerValue.TIMESTAMP,
         from: user
       }
+      let message2 ={
+        name: userName,
+        img: userPic,
+        message: messageText,
+        time: firebase.database.ServerValue.TIMESTAMP,
+        from: user
+      }
+
       updates['messages/'+user+'/'+userMessageTo+'/'+msgId] = message;
-      updates['messages/'+userMessageTo+'/'+user+'/'+msgId] = message;
+      updates['messages/'+userMessageTo+'/'+user+'/'+msgId] = message2;
+
       firebase.database().ref().update(updates)
+
       setMessage("")
     }
   }
@@ -259,7 +72,7 @@ const ChatScreen= props => {
     let result = (d.getHours() < 10 ? '0' : '') + d.getHours() + ':'
     result += (d.getMinutes() < 10 ? '0' : '') + d.getMinutes()
     if(c.getDay() !== d.getDay()) {
-      result = d.getDay() + ' ' + d.getMonth() + ' ' + result
+      result = d.getDay() + '.' + d.getMonth() + ' - ' + result
     }
     return result
   }
@@ -274,10 +87,11 @@ const ChatScreen= props => {
 
         if (user != null) {
           setUser(user.uid);
+          setUserPic(userImg)
+          setUserName(user.displayName)
           setUserMessageTo(user2)
           setSellerName(seller)
           setSellerPic(img)
-          console.log(user2);
 
           await firebase.database().ref("messages").child(user.uid).child(user2)
             .on('child_added', (value) => {
@@ -294,9 +108,15 @@ const ChatScreen= props => {
 
   const renderRow = (itemData) => {
     return(
-      <View style={{
-        flexDirection: 'row',
-        width: '60%',
+      <Animatable.View
+        animation="fadeInRight"
+        duration={600}
+        delay={300}
+        style={{
+        flexDirection: 'column',
+        maxWidth: '70%',
+        minWidth: '20%',
+        padding: 2,
         alignSelf: itemData.item.from===user ? 'flex-end' : 'flex-start',
         backgroundColor: '#44bda1',
         borderRadius: 5,
@@ -304,51 +124,137 @@ const ChatScreen= props => {
         <Text style={{color:"#fff", padding: 7, fontSize: 16}}>
           {itemData.item.message}
         </Text>
-        <Text style={{color:"#eee", padding:3, fontSize: 12}}>
+        <Text style={{color:"#eee", opacity: 0.7, padding:3, fontSize: 12}}>
           {convertTime(itemData.item.time)}
         </Text>
-      </View>
+      </Animatable.View>
     )
+  }
+
+  const keyboardEvent = (event, isShow) => {
+    let heightOS = isIOS ? 0 : 80
+    let bottomOS = isIOS ? 90 : 140
+    Animated.parallel([
+      Animated.timing(keyboardHeight, {
+        duration: event.duration,
+        toValue: isShow ? heightOS : 0
+      }),
+      Animated.timing(bottomPadding, {
+        duration: event.duration,
+        toValue: isShow ? bottomOS : 60
+      })
+    ]).start()
   }
 
   useEffect(() => {
     fetchUserData()
+    Keyboard.addListener(isIOS ? 'keyboardWillShow' : 'keyboardDidShow',
+    (e) => keyboardEvent(e,true))
+    Keyboard.addListener(isIOS ? 'keyboardWillHide' : 'keyboardDidHide',
+    (e) => keyboardEvent(e,false))
+    return () => {
+        Keyboard.removeListener("keyboardDidShow");
+        Keyboard.removeListener("keyboardDidHide");
+      };
   }, [])
 
+
   return(
-    <SafeAreaView>
-      <FlatList
-        style={{padding: 10, height: height * 0.67}}
-        data={messageList}
-        renderItem={renderRow}
-        keyExtractor={(item,index) => index.toString()}
-      />
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+    <KeyboardAvoidingView behavior="height" style={{flex:1}}>
+      <TouchableOpacity onPress={() => {
+        props.navigation.navigate("List")
+      }} style={styles.backButton}>
+        <Ionicons size={26} name="ios-arrow-back" color="white"/>
+      </TouchableOpacity>
+      <Animated.View
+        style={[styles.bottomBar, {bottom: keyboardHeight}]}>
         <TextInput
+        keyboardType ="default"
         style={styles.input}
         value={messageText}
+        onSubmitEditing={Keyboard.dismiss}
         placeHolder="Type message.."
         onChangeText={text => setMessage(text)}
         />
-        <TouchableOpacity onPress={sendMessage}>
-          <Text style={styles.btntext}>Send</Text>
+        <TouchableOpacity style={styles.buttonWrap} onPress={sendMessage}>
+          <View style={styles.buttonWrapper}>
+            <MaterialIcons size={20} name="send" color="white"/>
+          </View>
         </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+      </Animated.View>
+      <FlatList
+        ref={listRef}
+        onContentSizeChange={() => listRef.current.scrollToEnd({animated: true})}
+        onLayout={() => listRef.current.scrollToEnd({animated: true})}
+        style={{paddingTop: 5, paddingHorizontal: 5}}
+        data={messageList}
+        renderItem={renderRow}
+        ListFooterComponent={<Animated.View style={{height: bottomPadding}}/>}
+        keyExtractor={(item,index) => index.toString()}
+      />
+    </KeyboardAvoidingView>
   )
+}
+
+ChatScreen.navigationOptions = (data) => {
+  return{
+    headerShown: false,
+  }
 }
 
 const styles = StyleSheet.create({
   btntext: {
-    fontSize: 20
+    fontSize: 20,
+    marginRight: 5
+  },
+  backButton:{
+    position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 100,
+    top: height / 15,
+    left: width / 20,
+    width: 50,
+    height: 50,
+    backgroundColor: '#e56767',
+    borderRadius: 100,
+  },
+  buttonWrap:{
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginLeft: 10
+  },
+  bottomBar:{
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    // backgroundColor: '#fff',
+    padding: 5,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 2,
+    height: 60
+  },
+  buttonWrapper:{
+    backgroundColor: '#e56767',
+    borderRadius: 100,
+    padding: 8,
+    flexDirection: 'row'
   },
   input:{
-    padding: 20,
+    // paddingTop: 10,
+    paddingLeft: 20,
     borderWidth: 1,
     borderColor: "#ccc",
-    width: width / 1.3,
-    marginVertical: 20,
-    borderRadius: 20
+    width: '80%',
+    fontSize: 16,
+    backgroundColor: '#fff',
+    height: height / 20,
+    // marginBottom: 10,
+    borderRadius: 15
   }
 })
 
