@@ -50,14 +50,6 @@ const ChatList = props => {
               }
               setChats(oldArray => [...oldArray, [key, name, img]])
             }
-
-            const user2 = Object.values(snapshot.val())[0];
-            const user2UserId = Object.keys(snapshot.val())[0];
-            const image = Object.values(user2)[0].img;
-            const name = Object.values(user2)[0].name;
-            setUser2(name)
-            setUser2Img(image)
-            setUser2Id(user2UserId)
           });
         }
 
@@ -66,22 +58,18 @@ const ChatList = props => {
       }
   }
 
-  const handlePress = () => {
-    props.navigation.navigate("Chats", {
-      uid: user2Id,
-    })
-  }
-
   const renderProducts = (itemData) => {
     return(
        <ChatItem
         name={itemData.item[1]}
         img={itemData.item[2]}
         uid={itemData.item[0]}
-        handlePress={() => {
+        onSelectChat={() => {
           props.navigation.navigate("Chats", {
             uid: itemData.item[0],
-          })
+            seller: itemData.item[1],
+            img: itemData.item[2],
+          });
         }}
         />
     );
@@ -102,7 +90,7 @@ const ChatList = props => {
           top: 0,
           borderBottomLeftRadius: 100,
           borderBottomRightRadius: 100,
-          height: headerHeight,
+          height: headerHeight / 1.2,
           backgroundColor: '#c6f1e7',
           zIndex: 1000,
           elevation:1000,
@@ -123,13 +111,6 @@ const ChatList = props => {
        <FlatList
          contentContainerStyle={{ flex:1, marginTop: headerHeight}}
          scrollEventThrottle={16}
-       //   onScroll={Animated.event([
-       //     {
-       //     nativeEvent: { contentOffset: { y: scrollY }}
-       //     }
-       // ],{ useNativeDriver: true })}
-         // onRefresh={loadProducts}
-         // refreshing={isRefreshing}
          numColumns={1}
          data={chats}
          renderItem={renderProducts}

@@ -107,8 +107,8 @@ const styles = StyleSheet.create({
   topInfo:{
     flexDirection: 'row',
     backgroundColor: '#c6f1e7',
-    borderBottomLeftRadius: 1000,
-    borderBottomRightRadius: 1000,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
   },
   priceSummary:{
     flex:1,

@@ -70,7 +70,7 @@ const OwnListing = props => {
   return (
     <View style={styles.screen}>
       <Animatable.View
-        animation="fadeInLeft"
+        animation="fadeInDown"
         duration={800}
         style={styles.topInfo}>
         <View style={styles.leftTop}>
@@ -123,8 +123,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#c6f1e7',
     height: 60,
-    borderBottomLeftRadius: 1000,
-    borderBottomRightRadius: 1000,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
   },
   leftTop:{
     flex:1,

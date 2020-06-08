@@ -14,11 +14,17 @@ import { db } from '../config'
 
 var database = firebase.database();
 
+const AnimatableTouchableOpacity = Animatable.createAnimatableComponent(TouchableOpacity);
+const AnimatableTextInput = Animatable.createAnimatableComponent(TextInput);
+
 const {width,height} = Dimensions.get('window')
+const headerHeight = Platform.OS == 'ios' ? 120 : 70+StatusBar;
 
 const isIOS = Platform.OS === 'ios'
 
 const ChatScreen= props => {
+  const name = props.navigation.getParam("seller")
+  const imageProps = props.navigation.getParam("img")
 
   const dispatch = useDispatch()
 
@@ -133,7 +139,7 @@ const ChatScreen= props => {
 
   const keyboardEvent = (event, isShow) => {
     let heightOS = isIOS ? 0 : 80
-    let bottomOS = isIOS ? 90 : 140
+    let bottomOS = isIOS ? 60 : 140
     Animated.parallel([
       Animated.timing(keyboardHeight, {
         duration: event.duration,
@@ -161,14 +167,53 @@ const ChatScreen= props => {
 
   return(
     <KeyboardAvoidingView behavior="height" style={{flex:1}}>
-      <TouchableOpacity onPress={() => {
-        props.navigation.navigate("List")
-      }} style={styles.backButton}>
-        <Ionicons size={26} name="ios-arrow-back" color="white"/>
-      </TouchableOpacity>
+      <Animated.View
+        style={{
+          position: 'absolute',
+          flexDirection: 'row',
+          left: 0,
+          right: 0,
+          top: 0,
+          borderBottomLeftRadius: 20,
+          borderBottomRightRadius: 20,
+          height: headerHeight / 1.3,
+          backgroundColor: '#c6f1e7',
+          zIndex: 1000,
+          elevation:1000,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+       >
+         <TouchableOpacity onPress={() => {
+             props.navigation.navigate("List")
+           }} style={styles.backButton}>
+             <Ionicons size={26} name="ios-arrow-back" color="#254053"/>
+         </TouchableOpacity>
+         <View style={{marginTop: height / 30, flexDirection: 'row', flex:1, alignItems: 'center', justifyContent: 'center'}}>
+         <View>
+           <Animatable.Image
+             animation={"fadeInDown"}
+             duration={900}
+             style={{width: 40, height: height / 20, borderRadius: 100}}
+             source={{uri: imageProps}} />
+         </View>
+         <View style={{justifyContent: 'center', alignItems: 'center'}}>
+           <Animatable.Text
+             animation={"fadeInDown"}
+             duration={900}
+             style={styles.welcomeText}>
+             {name}
+          </Animatable.Text>
+         </View>
+         </View>
+         <View style={styles.header}>
+         </View>
+       </Animated.View>
       <Animated.View
         style={[styles.bottomBar, {bottom: keyboardHeight}]}>
-        <TextInput
+        <AnimatableTextInput
+        animation={"fadeInUp"}
+        duration={900}
         keyboardType ="default"
         style={styles.input}
         value={messageText}
@@ -176,17 +221,21 @@ const ChatScreen= props => {
         placeHolder="Type message.."
         onChangeText={text => setMessage(text)}
         />
-        <TouchableOpacity style={styles.buttonWrap} onPress={sendMessage}>
+        <AnimatableTouchableOpacity
+          animation={"fadeInRight"}
+          duration={900}
+          style={styles.buttonWrap}
+          onPress={sendMessage}>
           <View style={styles.buttonWrapper}>
             <MaterialIcons size={20} name="send" color="white"/>
           </View>
-        </TouchableOpacity>
+        </AnimatableTouchableOpacity>
       </Animated.View>
       <FlatList
         ref={listRef}
         onContentSizeChange={() => listRef.current.scrollToEnd({animated: true})}
         onLayout={() => listRef.current.scrollToEnd({animated: true})}
-        style={{paddingTop: 5, paddingHorizontal: 5}}
+        style={{ paddingHorizontal: 5}}
         data={messageList}
         renderItem={renderRow}
         ListFooterComponent={<Animated.View style={{height: bottomPadding}}/>}
@@ -211,12 +260,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 100,
-    top: height / 15,
-    left: width / 20,
-    width: 50,
-    height: 50,
-    backgroundColor: '#e56767',
+    zIndex: 1000,
+    top: height / 20,
+    left: width / 30,
+    width: 40,
+    height: 40,
     borderRadius: 100,
   },
   buttonWrap:{
@@ -245,7 +293,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   input:{
-    // paddingTop: 10,
     paddingLeft: 20,
     borderWidth: 1,
     borderColor: "#ccc",
@@ -253,8 +300,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     backgroundColor: '#fff',
     height: height / 20,
-    // marginBottom: 10,
     borderRadius: 15
+  },
+  welcomeText:{
+    marginLeft: 20,
+    width: '100%',
+    fontSize: width / 20,
+    fontWeight: 'bold',
+    opacity: 1,
+    color: '#254053',
   }
 })
 

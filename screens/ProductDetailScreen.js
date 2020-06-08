@@ -78,7 +78,7 @@ const ProductDetailScreen = props => {
         <View style={styles.arrowWrap}>
           <MaterialIcons onPress={() => {props.navigation.navigate("Homescreen")}} name="navigate-before" color="white" size={35}/>
         </View>
-            <View style={{position: 'absolute',top: height / 20 ,bottom: 0,left: 0,right: 0, borderTopRightRadius: 30, alignItems: 'center'}}>
+            <View style={{position: 'absolute',top: 0,bottom: 0,left: 0,right: 0, borderTopRightRadius: 30, alignItems: 'center'}}>
             <Animatable.Image
             animation="fadeInUp"
             duration={600}
@@ -116,7 +116,7 @@ const ProductDetailScreen = props => {
               <Text style={styles.location}>
                 {location}
               </Text>
-              <TouchableOpacity onPress={popAlert} style={{ width: width / 3.5}}>
+              <TouchableOpacity onPress={popAlert} style={{ width: width / 1.5}}>
                 <Text style={styles.seller}>{seller}</Text>
               </TouchableOpacity>
           </View>
@@ -128,7 +128,7 @@ const ProductDetailScreen = props => {
               props.navigation.navigate("Cart")
             }}
             style={{...styles.button, backgroundColor: '#e56767', flexDirection: 'row', justifyContent: 'center'}}>
-            <Text style={{fontSize: 20, fontWeight: 'bold', color: 'white'}}>Add to cart</Text>
+            <Text style={{fontSize: 20, fontWeight: 'bold', color: 'white'}}>Buy</Text>
             <MaterialIcons name="navigate-next" size={26} color="white"/>
           </TouchableOpacity>
       </Animatable.View>
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
   },
   price:{
     fontSize: 26,
-    bottom: height / 3.3,
+    bottom: height / 2.99,
     zIndex: 1000,
     right: 1,
     position: 'absolute',
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(52, 52, 52, 0.8)'
   },
   buttonWrapper:{
-    height: height / 2.7,
+    height: height / 2.5,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'white',
@@ -210,6 +210,7 @@ const styles = StyleSheet.create({
   },
   titleText:{
     fontSize: 26,
+
     fontWeight: 'bold',
     color: '#3c8b80',
     marginHorizontal: 30,
@@ -233,7 +234,7 @@ const styles = StyleSheet.create({
     marginBottom: 15
   },
   bgImg:{
-    flex:0.7,
+    flex:0.6,
     height: '100%',
     width: '100%',
     borderTopLeftRadius: 30,

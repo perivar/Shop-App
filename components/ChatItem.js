@@ -23,23 +23,29 @@ const height_logo = height * 0.4 * 0.4
 
 const ChatItem = props => {
   return (
-    <View style={{flex:1, marginTop: 40}}>
+    <Animatable.View
+      animation="fadeInRight"
+      duration={600}
+      >
       <TouchableOpacity
-        onPress={() => {console.log('pressed')}}
+        onPress={props.onSelectChat}
         style={{marginTop: 20, height: height / 12, backgroundColor: '#fbf7f7', borderRadius: 100, marginHorizontal: 20, flexDirection: 'row'}}>
         <View style={{justifyContent: 'center'}}>
-          <Image
+          <Animatable.Image
+            animation="bounceIn"
+            duration={600}
+            delay={200}
             style={{width: 70, height: height / 12, borderRadius: 100}}
             source={{uri: props.img}} />
         </View>
         <View style={{justifyContent: 'center', paddingLeft: 30}}>
           <Text style={{fontSize: 18, fontWeight: 'bold'}}>{props.name}</Text>
         </View>
-        <View style={{justifyContent: 'center', marginLeft: 100}}>
+        <View style={{justifyContent: 'center', flex:1, marginRight: 10, alignItems: 'flex-end'}}>
           <MaterialIcons name="navigate-next" size={26} color="black"/>
         </View>
       </TouchableOpacity>
-    </View>
+    </Animatable.View>
   )
 }
 
