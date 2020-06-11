@@ -1,11 +1,12 @@
 import React, { useState, useCallback, useEffect } from 'react'
-import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity, ActivityIndicator, SafeAreaView} from 'react-native';
+import { View, Text, Dimensions, StyleSheet, Button, FlatList, TouchableOpacity, ActivityIndicator, SafeAreaView} from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 import HeaderButton from '../components/HeaderButton'
 import { useSelector, useDispatch} from 'react-redux'
 import CartItem from '../components/CartItem'
 import { placeOrder } from '../store/actions/products'
 import { fetchCart } from '../store/actions/products'
+const {width,height} = Dimensions.get('window')
 
 const OrderScreen = props => {
 
@@ -97,7 +98,7 @@ OrderScreen.navigationOptions = (data) => {
         },
     },
     headerTitleStyle: {
-      fontSize: 20,
+      fontSize: width / 15,
       fontWeight: 'bold',
     },
   }

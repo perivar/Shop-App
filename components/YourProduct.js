@@ -13,7 +13,7 @@ const YourProduct = props => {
 
   const [animation, setAnimation] = useState()
 
-  const deleteHandler = (productToDelete) => { 
+  const deleteHandler = (productToDelete) => {
     Alert.alert(
       props.name,
       'Are your sure you want to delete ' + props.name + '?',
@@ -87,6 +87,7 @@ const YourProduct = props => {
 const styles = StyleSheet.create({
   container:{
     flex:1,
+    marginBottom: height / 4,
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',

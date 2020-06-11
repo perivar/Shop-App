@@ -7,6 +7,7 @@ import { useFonts } from '@use-expo/font';
 import Animated, { Easing } from 'react-native-reanimated';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import * as Animatable from 'react-native-animatable';
+import { LinearGradient } from 'expo-linear-gradient'
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 const headerHeight = Platform.OS == 'ios' ? 120 : 70+StatusBar;
@@ -138,6 +139,15 @@ const ProductList = props => {
               justifyContent: 'center',
             }}
            >
+               <LinearGradient
+                  start={[0.45,-0.3]}
+                   colors={['#f8f3e2', '#C6F1E7']}
+                   style={{
+                     borderBottomLeftRadius: 20,
+                     borderBottomRightRadius: 20,
+                     height: height / 3
+                   }}
+                 />
              <Animatable.Text
                animation={animationState}
                duration={900}
@@ -150,14 +160,13 @@ const ProductList = props => {
              Welcome {username}!
             </Animatable.Text>
              <View style={styles.header}>
-
                <Animatable.Image
                  source={require('../assets/logo.png')}
                  style={styles.logo}
                  resizeMode={"stretch"}
                  animation="fadeInDown"
                  duration={600}
-                 delay={4000}
+                 delay={3500}
                />
              </View>
              <MaterialIcons onPress={() => {console.log(props.navigation.navigation.navigate("Settings"))}} name="settings" size={24} style={{position: 'absolute', top: 53 ,right: 13}}/>
@@ -194,6 +203,7 @@ const styles = StyleSheet.create({
   header:{
     justifyContent: 'center',
     alignItems: 'center',
+    position: 'absolute',
     marginBottom: headerHeight + height_logo / 3,
     shadowColor: "#8aa8a1",
     shadowRadius: 5,
@@ -202,7 +212,7 @@ const styles = StyleSheet.create({
     paddingTop: 30
   },
   logo:{
-    top:height / 6,
+    top:height / 35,
     width: height_logo,
     height: height_logo,
     borderRadius: height_logo / 2,

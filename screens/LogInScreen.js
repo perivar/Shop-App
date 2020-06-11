@@ -205,7 +205,7 @@ LogInScreen.navigationOptions = {
 
 const styles = StyleSheet.create({
   screen: {
-    flex: 1,
+    height: '100%'
   },
   arrowWrap:{
     top: height / 20,

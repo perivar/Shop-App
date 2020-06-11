@@ -1,5 +1,5 @@
 import React, { useState, useReducer, useEffect } from 'react'
-import { View, Text, Animated, StyleSheet, Button, Dimensions, FlatList, TouchableOpacity, TextInput, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { View, Text, Animated, StyleSheet, ActivityIndicator, Button, Dimensions, FlatList, TouchableOpacity, TextInput, KeyboardAvoidingView, ScrollView } from 'react-native';
 import { addListing } from '../store/actions/products'
 import { MaterialIcons } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux'
@@ -28,6 +28,8 @@ const NewItem = props => {
   const [username, setUsername] = useState(null)
   const [profilePic, setProfilePic] = useState(null)
   const [swipe, setSwipe] = useState("")
+
+  const [isLoading, setIsLoading] = useState(false)
 
   const currentState = useSelector(state => state.allProducts.products)
 
@@ -102,9 +104,11 @@ const NewItem = props => {
   const [descHolder, setDescHolder] = useState("Add your Description")
   // const [locationHolder, setLocationHolder] = useState("Add your Location")
 
-  const submitChanges = () => {
-    let objectReturn = addListing(nameHolder, descHolder, priceHolder, image, selectedLocation, username, profilePic)
-    dispatch(objectReturn)
+  const submitChanges = async () => {
+    setIsLoading(true)
+    let objectReturn = await addListing(nameHolder, descHolder, priceHolder, image, selectedLocation, username, profilePic)
+    await dispatch(objectReturn)
+    setIsLoading(false)
     props.navigation.popToTop();
   }
 
@@ -114,8 +118,9 @@ const NewItem = props => {
 
   return(
     <KeyboardAvoidingView
-      style={{flex:1}}>
-      <View style={{flex:1, backgroundColor: '#F5E9EA', justifyContent: 'flex-end'}}>
+      style={{height: height}}
+      behavior="padding">
+      <ScrollView contentContainerStyle={{flex:1, backgroundColor: '#F5E9EA', justifyContent: 'flex-end'}}>
         <View style={styles.arrowWrap}>
           <MaterialIcons onPress={() => {props.navigation.navigate("Market")}} name="navigate-before" color="white" size={35}/>
         </View>
@@ -212,15 +217,14 @@ const NewItem = props => {
               <TouchableOpacity
                 onPress={submitChanges}
                 style={{...styles.button, backgroundColor: '#e56767', flexDirection: 'row', justifyContent: 'center'}}>
-
-                <Text style={{fontSize: 20, fontWeight: 'bold', color: 'white'}}>Add product</Text>
+                {isLoading ? <ActivityIndicator size="small" color="#fff"/> : <Text style={{fontSize: 20, fontWeight: 'bold', color: 'white'}}>Add product</Text> }
                 <MaterialIcons name="navigate-next" size={26} color="white"/>
               </TouchableOpacity>
             </ScrollView>
           </Animated.View>
         </GestureRecognizer>
         </View>
-        </View>
+        </ScrollView>
       </KeyboardAvoidingView>
   )
 }
@@ -234,7 +238,7 @@ NewItem.navigationOptions = (data) => {
 
 const styles = StyleSheet.create({
   buttonWrapper:{
-    height: height / 2,
+    height: height / 1.7,
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',

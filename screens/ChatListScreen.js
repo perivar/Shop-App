@@ -12,6 +12,7 @@ import * as Animatable from 'react-native-animatable';
 import { MaterialIcons } from '@expo/vector-icons';
 import { db } from '../config'
 import ChatItem from '../components/ChatItem'
+import { LinearGradient } from 'expo-linear-gradient'
 
 const {width,height} = Dimensions.get('window')
 const headerHeight = Platform.OS == 'ios' ? 120 : 70+StatusBar;
@@ -88,8 +89,8 @@ const ChatList = props => {
           left: 0,
           right: 0,
           top: 0,
-          borderBottomLeftRadius: 100,
-          borderBottomRightRadius: 100,
+          borderBottomLeftRadius: 20,
+          borderBottomRightRadius: 20,
           height: headerHeight / 1.2,
           backgroundColor: '#c6f1e7',
           zIndex: 1000,
@@ -97,8 +98,21 @@ const ChatList = props => {
           transform: [{ translateY: headerY }],
           alignItems: 'center',
           justifyContent: 'center',
+          overflow: 'hidden',
         }}
        >
+
+           <LinearGradient
+                start={[0.45,-0.5]}
+               colors={['#fff5e8', '#cbf2e9']}
+               style={{
+                 borderBottomLeftRadius: 20,
+                 borderBottomRightRadius: 20,
+                 height: '100%',
+                 width: '100%'
+               }}
+             />
+
          <Animatable.Text
            animation={animationState}
            duration={900}
@@ -157,7 +171,7 @@ const styles = StyleSheet.create({
     flex:1,
     textAlign: 'center',
     width: '100%',
-    fontSize: width / 20,
+    fontSize: width / 15,
     fontWeight: 'bold',
     opacity: 1,
     color: '#254053',

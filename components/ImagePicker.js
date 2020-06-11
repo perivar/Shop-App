@@ -1,13 +1,16 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { AsyncStorage } from 'react-native'
 import { StackActions, NavigationActions } from 'react-navigation';
-import { View, Alert, Text, StyleSheet, ActivityIndicator, Button, Image, FlatList, TouchableOpacity } from 'react-native';
+import { View, Alert, Dimensions, Text, StyleSheet, ActivityIndicator, Button, Image, FlatList, TouchableOpacity } from 'react-native';
 import { useDispatch } from 'react-redux'
+import { LinearGradient } from 'expo-linear-gradient'
 import { logout } from '../store/actions/auth'
 import * as ImagePicker from 'expo-image-picker'
 import * as Permissions from 'expo-permissions'
 import * as firebase from 'firebase'
 import * as Progress from 'react-native-progress';
+
+const {width,height} = Dimensions.get('window')
 
 const ImgPicker = props => {
   const didBlurSubscription = useEffect(() => {
@@ -90,10 +93,17 @@ const ImgPicker = props => {
     <View style={styles.imagePicker}>
       {isLoading ? (
         <View style={styles.imagePreview}>
-          <Text style={{marginBottom: 30}}>
-            Loading....
-          </Text>
-          <ActivityIndicator size="large" color="#3c8b80"/>
+          <LinearGradient
+              colors={['#ffc3a0', '#ffafbd']}
+              style={{
+                position: 'absolute',
+                width: width,
+                height: height
+              }}
+            />
+          <View style={{justifyContent: 'center', alignItems: 'center', width: 100, height: 100, borderRadius: 30, backgroundColor: '#f7d1d1'}}>
+            <ActivityIndicator size="large" color="white"/>
+          </View>
         </View>
       ): (<View></View>)}
        {/* <View style={styles.imagePreview}>

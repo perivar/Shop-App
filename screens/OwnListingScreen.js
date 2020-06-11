@@ -1,11 +1,21 @@
 import React, { useState, useCallback, useEffect} from 'react'
-import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Button, FlatList, TouchableOpacity } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 import HeaderButton from '../components/HeaderButton'
 import { useSelector, useDispatch} from 'react-redux'
 import YourProduct from '../components/YourProduct'
 import Animated, { Easing } from 'react-native-reanimated';
 import * as Animatable from 'react-native-animatable';
+import { LinearGradient } from 'expo-linear-gradient'
+
+const {width,height} = Dimensions.get('window')
+const headerHeight = Platform.OS == 'ios' ? 120 : 70+StatusBar;
+const scrollY = new Animated.Value(0)
+const headerY = Animated.interpolate(scrollY, {
+  inputRange:[0, headerHeight],
+  outputRange:[0,-headerHeight]
+})
+const height_logo = height * 0.4 * 0.4
 
 const OwnListing = props => {
   const [isRefreshing, setIsRefreshing] = useState(false)
@@ -50,8 +60,8 @@ const OwnListing = props => {
         style={styles.topInfo}>
         <View style={styles.leftTop}>
           <Animatable.Text
-            animation="fadeInDown"
-            delay={200}
+            animation="fadeIn"
+            delay={400}
             duration={800}
             style={styles.summaryTitle}>
             You have {userProducts.length} products for sale
@@ -69,18 +79,57 @@ const OwnListing = props => {
 
   return (
     <View style={styles.screen}>
-      <Animatable.View
+      <Animated.View
+        style={{
+          position: 'absolute',
+          flexDirection: 'row',
+          left: 0,
+          right: 0,
+          top: 0,
+          borderBottomLeftRadius: 20,
+          borderBottomRightRadius: 20,
+          height: headerHeight * 1.2,
+          backgroundColor: '#c6f1e7',
+          zIndex: 1000,
+          elevation:1000,
+          transform: [{ translateY: headerY }],
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+       >
+           <LinearGradient
+                start={[0.6,-0.4]}
+               colors={['#c2e9fb', '#C6F1E7']}
+               style={{
+                 flex:1,
+                 borderBottomLeftRadius: 20,
+                 borderBottomRightRadius: 20,
+                 // height: height / 3
+               }}
+             />
+         <Animatable.Text
+           animation="fadeInDown"
+           duration={700}
+           style={styles.welcomeText}>
+           Your listings
+        </Animatable.Text>
+          <Animatable.Text
+            animation="fadeInLeft"
+            duration={500}
+            style={styles.summaryTitle}>
+            You have {userProducts.length} products for sale
+          </Animatable.Text>
+         <View style={styles.header}>
+         </View>
+       </Animated.View>
+      {/* <Animatable.View
         animation="fadeInDown"
         duration={800}
         style={styles.topInfo}>
-        <View style={styles.leftTop}>
-          <Text
-            style={styles.summaryTitle}>
-            You have {userProducts.length} products for sale
-          </Text>
-        </View>
-      </Animatable.View>
+
+      </Animatable.View> */}
       <FlatList
+        contentContainerStyle={{ flex:1, marginTop: headerHeight * 2.1}}
         refreshing={isRefreshing}
         numColumns={1}
         data={userProducts}
@@ -93,6 +142,7 @@ const OwnListing = props => {
 OwnListing.navigationOptions = (data) => {
   return{
     headerTitle: 'Your Listings',
+    headerShown: false,
     // headerRight: (
     //   <HeaderButtons HeaderButtonComponent={HeaderButton}>
     //     <Item title="ios-add" iconName="ios-add-circle-outline" onPress={() => {
@@ -117,7 +167,7 @@ OwnListing.navigationOptions = (data) => {
 const styles = StyleSheet.create({
   screen:{
     flex:1,
-    backgroundColor: '#F5E9EA'
+    backgroundColor: '#F5E9EA',
   },
   topInfo:{
     flexDirection: 'row',
@@ -131,12 +181,29 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  welcomeText:{
+    flex:1,
+    textAlign: 'center',
+    width: '100%',
+    fontSize: width / 13,
+    fontWeight: 'bold',
+    opacity: 1,
+    color: '#254053',
+    top: 55,
+    left: 0,
+    position: 'absolute'
+  },
   summaryTitle:{
-    fontSize: 18,
-    fontWeight: '600',
+    flex:1,
+    textAlign: 'center',
+    width: '100%',
+    fontSize: width / 22,
+    fontWeight: 'bold',
     opacity: 0.8,
     color: '#254053',
-    paddingLeft: 20
+    top: height / 8,
+    left: 0,
+    position: 'absolute'
   },
 })
 

@@ -10,6 +10,8 @@ import * as Font from 'expo-font';
 import { AppLoading } from 'expo';
 import { Asset } from 'expo-asset';
 
+console.disableYellowBox = true;
+
 const rootReducer = combineReducers({
   allProducts: productReducer,
   auth: authReducer

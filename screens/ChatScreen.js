@@ -11,6 +11,7 @@ import { fetchMessages } from '../store/actions/products'
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import * as Animatable from 'react-native-animatable';
 import { db } from '../config'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 var database = firebase.database();
 
@@ -124,7 +125,7 @@ const ChatScreen= props => {
         minWidth: '20%',
         padding: 2,
         alignSelf: itemData.item.from===user ? 'flex-end' : 'flex-start',
-        backgroundColor: '#44bda1',
+        backgroundColor: itemData.item.from===user ? '#44bda1' : '#7f7f7f',
         borderRadius: 5,
         margin: 10}}>
         <Text style={{color:"#fff", padding: 7, fontSize: 16}}>
@@ -166,7 +167,7 @@ const ChatScreen= props => {
 
 
   return(
-    <KeyboardAvoidingView behavior="height" style={{flex:1}}>
+    <KeyboardAvoidingView behavior="height" style={{height: '100%'}}>
       <Animated.View
         style={{
           position: 'absolute',
