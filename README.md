@@ -25,7 +25,7 @@ A Shop App built on React Native and Redux
 <img src="https://user-images.githubusercontent.com/20997734/84428075-26eca880-ac26-11ea-9342-78fe403ebe2c.PNG" width="30%" height="30%">
 
 # Chat Screen
-<img src="hhttps://user-images.githubusercontent.com/20997734/84428236-6c10da80-ac26-11ea-82a9-1614a90a78d8.PNG" width="30%" height="30%">
+<img src="https://user-images.githubusercontent.com/20997734/84431978-746c1400-ac2c-11ea-804a-3ad3c7d36c99.PNG" width="30%" height="30%">
 
 # Settings screen
 <img src="https://user-images.githubusercontent.com/20997734/84428287-7df27d80-ac26-11ea-8d2a-375a6da5ced8.PNG" width="30%" height="30%">
