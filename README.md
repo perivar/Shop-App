@@ -1,5 +1,5 @@
 # Shop-App
-A Shop App built on React Native and Redux
+A Shop App built on React Native and Redux as front end, and FIrebase ( Google Cloud ) as backend.
 
 # Front Page
 <img src="https://user-images.githubusercontent.com/20997734/84427595-754d7780-ac25-11ea-9b6a-233ca4e2a901.PNG" width="30%" height="30%">
