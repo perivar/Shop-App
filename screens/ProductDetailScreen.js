@@ -136,7 +136,7 @@ const ProductDetailScreen = props => {
         show={showAlert}
         showProgress={false}
         alertContainerStyle={{zIndex: 1000}}
-        title={<Ionicons name="ios-chatbubbles" size={50} />}
+        customView={<Ionicons name="ios-chatbubbles" size={50} />}
         titleStyle={{fontSize: 30}}
         messageStyle={{fontSize: 15}}
         cancelButtonStyle={{marginRight: 5, paddingVertical: 15, paddingHorizontal: 25}}

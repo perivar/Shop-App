@@ -12,7 +12,7 @@ import { LinearGradient } from 'expo-linear-gradient'
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 const headerHeight = Platform.OS == 'ios' ? 120 : 70+StatusBar;
 const scrollY = new Animated.Value(0)
-const headerY = Animated.interpolate(scrollY, {
+const headerY = Animated.interpolateNode(scrollY, {
   inputRange:[0, headerHeight],
   outputRange:[0,-headerHeight]
 })

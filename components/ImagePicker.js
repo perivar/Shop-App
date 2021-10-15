@@ -9,6 +9,7 @@ import * as ImagePicker from 'expo-image-picker'
 import * as Permissions from 'expo-permissions'
 import * as firebase from 'firebase'
 import * as Progress from 'react-native-progress';
+import { Camera } from 'expo-camera';
 
 const {width,height} = Dimensions.get('window')
 
@@ -37,7 +38,7 @@ const ImgPicker = props => {
   const [pickedImage, setPickedImage] = useState()
 
   const verifyPermissions = async () => {
-    const result = await Permissions.askAsync(Permissions.CAMERA)
+    const result = await Camera.requestPermissionsAsync()
     if (result.status !== 'granted') {
       Alert.alert("Need permissions to take photo", [{text: 'Okay'}])
       return false;

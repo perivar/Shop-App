@@ -83,7 +83,7 @@ const OrderScreen = props => {
 OrderScreen.navigationOptions = (data) => {
   return {
     headerTitle: 'Cart',
-    headerRight: (
+    headerRight: () => (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item title="settings" iconName="ios-rocket" onPress={() => {
           data.navigation.navigate('PlacedOrders')

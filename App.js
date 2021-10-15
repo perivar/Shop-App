@@ -7,10 +7,11 @@ import productReducer from './store/reducers/products'
 import ReduxThunk from 'redux-thunk'
 import authReducer from './store/reducers/auth'
 import * as Font from 'expo-font';
-import { AppLoading } from 'expo';
+import { AppLoading } from 'expo-app-loading';
 import { Asset } from 'expo-asset';
+import { LogBox } from "react-native";
 
-console.disableYellowBox = true;
+LogBox.ignoreAllLogs() 
 
 const rootReducer = combineReducers({
   allProducts: productReducer,
@@ -32,17 +33,17 @@ export default function App() {
   const [fontLoaded, setFontLoaded] = useState(false);
   const [pictureLoaded, setPictureLoaded] = useState(false)
 
-  if (!fontLoaded || !pictureLoaded) {
-    return (
-      <AppLoading
-        startAsync={fetchFonts}
-        onFinish={() => {
-          setFontLoaded(true);
-          setPictureLoaded(true)
-        }}
-      />
-    );
-  }
+  //  if (!fontLoaded || !pictureLoaded) {
+  //    return (
+  //      <AppLoading
+  //        startAsync={fetchFonts}
+  //        onFinish={() => {
+  //          setFontLoaded(true);
+  //          setPictureLoaded(true)
+  //        }}
+  //      />
+  //    );
+  //  }
   return (
     <Provider store={store}>
       <ShopNavigator />

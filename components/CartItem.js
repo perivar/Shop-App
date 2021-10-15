@@ -60,7 +60,7 @@ const CartItem = props =>  {
               <Text style={styles.productText}>
                 SEE PRODUCT
               </Text>
-              <Ionicons style={styles.trashIcon} name="ios-arrow-dropright" size={20} color="#254053" />
+              <Ionicons style={styles.trashIcon}  name="ios-arrow-forward-circle" size={20} color="#254053" />
             </TouchableOpacity>
         </View>
 

@@ -15,7 +15,7 @@ import { db } from '../config'
 const {width,height} = Dimensions.get('window')
 const headerHeight = Platform.OS == 'ios' ? 120 : 70+StatusBar;
 const scrollY = new Animated.Value(0)
-const headerY = Animated.interpolate(scrollY, {
+const headerY = Animated.interpolateNode(scrollY, {
   inputRange:[0, headerHeight],
   outputRange:[0,-headerHeight]
 })

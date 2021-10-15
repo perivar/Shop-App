@@ -12,7 +12,7 @@ const HomeScreen = props => {
 HomeScreen.navigationOptions = (data) => {
   return {
     headerTitle: 'Shop App',
-    headerRight: (
+    headerRight: () => (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item title="settings" iconName="ios-settings" onPress={() => {
           data.navigation.navigate('Settings')

@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react'
-import * as Permissions from 'expo-permissions'
+import * as Location from 'expo-location'
+import * as ImagePicker from 'expo-image-picker'
 
 class UserPermissions {
   getCameraPermission = async () => {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL)
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
     if (status != "granted") {
       Alert.alert("Need permissions to take photo", [{text: 'Okay'}])
     }
   }
   getLocationPermission = async () => {
-    const { status } = await Permissions.askAsync(Permissions.LOCATION)
+    const { status } = await Location.requestForegroundPermissionsAsync()
     if (status != "granted") {
       Alert.alert("Need permissions to take photo", [{text: 'Okay'}])
     }
