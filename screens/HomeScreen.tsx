@@ -1,44 +1,40 @@
-import React, { useState } from 'react'
-import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity, SafeAreaView } from 'react-native';
-import { HeaderButtons, Item } from 'react-navigation-header-buttons'
-import HeaderButton from '../components/HeaderButton'
-import { useSelector } from 'react-redux'
-import ProductList from '../components/ProductList'
+import React from 'react';
 
-const HomeScreen = props => {
-  return (<ProductList navigation={props}/>)
-}
+import ProductList from '../components/ProductList';
+import { RootStackScreenProps } from '../navigation/ShopNavigation';
 
-HomeScreen.navigationOptions = (data) => {
-  return {
-    headerTitle: 'Shop App',
-    headerRight: () => (
-      <HeaderButtons HeaderButtonComponent={HeaderButton}>
-        <Item title="settings" iconName="ios-settings" onPress={() => {
-          data.navigation.navigate('Settings')
-        }} />
-      </HeaderButtons>
-    ),
-    headerStyle: {
-      backgroundColor: '#D6A5AB',
-      shadowRadius: 0,
-      shadowOffset: {
-          height: 0,
-      },
-    },
-    headerTitleStyle: {
-      fontWeight: 'bold',
-      fontSize: 30,
-      fontFamily: 'blackjack'
-    },
-    headerShown: false
-  }
-}
+const HomeScreen = (props: RootStackScreenProps<'Home'>) => {
+  return <ProductList navigation={props} />;
+};
 
-const styles = StyleSheet.create({
-  container:{
-    flex:1,
-  }
-})
+// HomeScreen.navigationOptions = data => {
+//   return {
+//     headerTitle: 'Shop App',
+//     headerRight: () => (
+//       <HeaderButtons HeaderButtonComponent={HeaderButton}>
+//         <Item
+//           title="settings"
+//           iconName="ios-settings"
+//           onPress={() => {
+//             data.navigation.navigate('Settings');
+//           }}
+//         />
+//       </HeaderButtons>
+//     ),
+//     headerStyle: {
+//       backgroundColor: '#D6A5AB',
+//       shadowRadius: 0,
+//       shadowOffset: {
+//         height: 0,
+//       },
+//     },
+//     headerTitleStyle: {
+//       fontWeight: 'bold',
+//       fontSize: 30,
+//       fontFamily: 'blackjack',
+//     },
+//     headerShown: false,
+//   };
+// };
 
 export default HomeScreen;

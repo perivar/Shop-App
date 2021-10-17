@@ -1,33 +1,23 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { AsyncStorage } from "react-native";
-import { StackActions, NavigationActions } from "react-navigation";
+import { LinearGradient } from 'expo-linear-gradient';
+import firebase from 'firebase';
+import React, { useEffect, useState } from 'react';
 import {
-  View,
-  Alert,
-  Text,
   Dimensions,
+  FlatList,
+  ListRenderItem,
+  Platform,
   StatusBar,
   StyleSheet,
-  ActivityIndicator,
-  Button,
-  Image,
-  FlatList,
-  TouchableOpacity,
-} from "react-native";
-import { useDispatch } from "react-redux";
-import { logout } from "../store/actions/auth";
-import Animated, { Easing } from "react-native-reanimated";
-import * as Permissions from "expo-permissions";
-import * as firebase from "firebase";
-import * as Progress from "react-native-progress";
-import * as Animatable from "react-native-animatable";
-import { MaterialIcons } from "@expo/vector-icons";
-import { db } from "../config";
-import ChatItem from "../components/ChatItem";
-import { LinearGradient } from "expo-linear-gradient";
+  View,
+} from 'react-native';
+import * as Animatable from 'react-native-animatable';
+import Animated from 'react-native-reanimated';
 
-const { width, height } = Dimensions.get("window");
-const headerHeight = Platform.OS == "ios" ? 120 : 70 + StatusBar;
+import ChatItem from '../components/ChatItem';
+import { RootStackScreenProps } from '../navigation/ShopNavigation';
+
+const { width, height } = Dimensions.get('window');
+const headerHeight = Platform.OS === 'ios' ? 120 : 70 + StatusBar.currentHeight;
 const scrollY = new Animated.Value(0);
 const headerY = Animated.interpolateNode(scrollY, {
   inputRange: [0, headerHeight],
@@ -35,51 +25,47 @@ const headerY = Animated.interpolateNode(scrollY, {
 });
 const height_logo = height * 0.4 * 0.4;
 
-var database = firebase.database();
-
-const ChatList = (props) => {
-  const [user, setUser] = useState();
-  const [user2, setUser2] = useState();
-  const [user2Img, setUser2Img] = useState();
-  const [animationState, setAnimationState] = useState("fadeInDown");
-  const [user2Id, setUser2Id] = useState();
-  const [chats, setChats] = useState([]);
+const ChatList = (props: RootStackScreenProps<'List'>) => {
+  const [user, setUser] = useState<string>();
+  const [animationState, setAnimationState] = useState('fadeInDown');
+  const [chats, setChats] = useState<string[][]>([]);
 
   const fetchUserData = async () => {
     try {
       const user = await firebase.auth().currentUser;
-      if (user != null) {
+      if (user !== null) {
         setUser(user.uid);
         await firebase
           .database()
-          .ref("messages" + "/" + user.uid)
-          .once("value")
+          .ref('messages' + '/' + user.uid)
+          .once('value')
           .then(function (snapshot) {
             for (var key in snapshot.val()) {
               const obj = snapshot.val()[key];
-              let name = null;
-              let img = null;
+              let name: string = null;
+              let img: string = null;
               for (var keys in obj) {
                 name = obj[keys].name;
                 img = obj[keys].img;
               }
-              setChats((oldArray) => [...oldArray, [key, name, img]]);
+              setChats(oldArray => [...oldArray, [key, name, img]]);
             }
           });
       }
     } catch (error) {
       // Error retrieving data
+      console.log(error);
     }
   };
 
-  const renderProducts = (itemData) => {
+  const renderChats: ListRenderItem<string[]> = itemData => {
     return (
       <ChatItem
         name={itemData.item[1]}
         img={itemData.item[2]}
         uid={itemData.item[0]}
         onSelectChat={() => {
-          props.navigation.navigate("Chats", {
+          props.navigation.navigate('Chats', {
             uid: itemData.item[0],
             seller: itemData.item[1],
             img: itemData.item[2],
@@ -94,42 +80,39 @@ const ChatList = (props) => {
   }, []);
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#F5E9EA" }}>
+    <View style={{ flex: 1, backgroundColor: '#F5E9EA' }}>
       <Animated.View
         style={{
-          position: "absolute",
-          flexDirection: "row",
+          position: 'absolute',
+          flexDirection: 'row',
           left: 0,
           right: 0,
           top: 0,
           borderBottomLeftRadius: 20,
           borderBottomRightRadius: 20,
           height: headerHeight / 1.2,
-          backgroundColor: "#c6f1e7",
+          backgroundColor: '#c6f1e7',
           zIndex: 1000,
           elevation: 1000,
           transform: [{ translateY: headerY }],
-          alignItems: "center",
-          justifyContent: "center",
-          overflow: "hidden",
-        }}
-      >
+          alignItems: 'center',
+          justifyContent: 'center',
+          overflow: 'hidden',
+        }}>
         <LinearGradient
           start={[0.45, -0.5]}
-          colors={["#fff5e8", "#cbf2e9"]}
+          colors={['#fff5e8', '#cbf2e9']}
           style={{
             borderBottomLeftRadius: 20,
             borderBottomRightRadius: 20,
-            height: "100%",
-            width: "100%",
+            height: '100%',
+            width: '100%',
           }}
         />
-
         <Animatable.Text
           animation={animationState}
           duration={900}
-          style={styles.welcomeText}
-        >
+          style={styles.welcomeText}>
           Chats
         </Animatable.Text>
         <View style={styles.header}></View>
@@ -139,56 +122,35 @@ const ChatList = (props) => {
         scrollEventThrottle={16}
         numColumns={1}
         data={chats}
-        renderItem={renderProducts}
+        renderItem={renderChats}
         keyExtractor={(item, index) => index.toString()}
       />
-      <Text></Text>
     </View>
   );
 };
 
-ChatList.navigationOptions = (data) => {
-  return {
-    headerShown: false,
-  };
-};
-
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    flexDirection: "column",
-    alignItems: "center",
-    width: "100%",
-    height: "100%",
-    backgroundColor: "#F5E9EA",
-  },
   header: {
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     marginBottom: headerHeight + height_logo / 3,
-    shadowColor: "#8aa8a1",
+    shadowColor: '#8aa8a1',
     shadowRadius: 5,
-    shadowOffset: { height: 5 },
+    shadowOffset: { height: 5, width: 5 },
     shadowOpacity: 0.2,
     paddingTop: 30,
   },
-  logo: {
-    top: height / 6,
-    width: height_logo,
-    height: height_logo,
-    borderRadius: height_logo / 2,
-  },
   welcomeText: {
     flex: 1,
-    textAlign: "center",
-    width: "100%",
+    textAlign: 'center',
+    width: '100%',
     fontSize: width / 15,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     opacity: 1,
-    color: "#254053",
+    color: '#254053',
     top: 55,
     left: 0,
-    position: "absolute",
+    position: 'absolute',
   },
 });
 

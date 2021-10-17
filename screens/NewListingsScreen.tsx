@@ -1,23 +1,11 @@
-import React, { useState } from 'react'
-import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity} from 'react-native';
-import NewItem from '../components/NewItem'
+import React from 'react';
 
-const NewListingsScreen = props => {
-  console.log(props);
-  return (
-    <NewItem navigation={props.navigation}/>
-  )
-}
+import NewItem from '../components/NewItem';
+import { RootStackScreenProps } from '../navigation/ShopNavigation';
 
-const styles = StyleSheet.create({
-  container:{
-    flex:1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  text:{
-    color: 'black'
-  },
-})
+// use the Form prop since we are forwarding the props to NewItem
+const NewListingsScreen = (props: RootStackScreenProps<'Form'>) => {
+  return <NewItem {...props} />;
+};
 
 export default NewListingsScreen;

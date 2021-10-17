@@ -1,33 +1,74 @@
-import React, { useReducer, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
+import React, { useEffect, useReducer } from 'react';
+import {
+  KeyboardTypeOptions,
+  StyleProp,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  ViewStyle,
+} from 'react-native';
 
 const INPUT_CHANGE = 'INPUT_CHANGE';
 const INPUT_BLUR = 'INPUT_BLUR';
 
-const inputReducer = (state, action) => {
+type State = {
+  value: string;
+  isValid: boolean;
+  touched: boolean;
+};
+
+type Action = {
+  type: string;
+  value?: string;
+  isValid?: boolean;
+};
+
+const inputReducer = (state: State, action: Action) => {
   switch (action.type) {
     case INPUT_CHANGE:
       return {
         ...state,
         value: action.value,
-        isValid: action.isValid
+        isValid: action.isValid,
       };
     case INPUT_BLUR:
       return {
         ...state,
-        touched: true
+        touched: true,
       };
     default:
       return state;
   }
 };
 
-const Input = props => {
-  const [inputState, dispatch] = useReducer(inputReducer, {
+const Input: React.FC<{
+  id?: string;
+  label?: string;
+  initialValue?: string;
+  value?: string;
+  errorText?: string;
+  initiallyValid?: boolean;
+  containerStyle?: StyleProp<ViewStyle>;
+  style?: StyleProp<ViewStyle>;
+  keyboardType?: KeyboardTypeOptions;
+  autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
+  required?: boolean;
+  secureTextEntry?: boolean;
+  email?: boolean;
+  min?: number;
+  max?: number;
+  minLength?: number;
+  placeholder?: string;
+  onInputChange?: (id: string, value: string, isValid: boolean) => void;
+  onChangeText?: (text: string) => void;
+}> = props => {
+  const initialState: State = {
     value: props.initialValue ? props.initialValue : '',
     isValid: props.initiallyValid,
-    touched: false
-  });
+    touched: false,
+  };
+  const [inputState, dispatch] = useReducer(inputReducer, initialState);
 
   const { onInputChange, id } = props;
 
@@ -37,8 +78,9 @@ const Input = props => {
     }
   }, [inputState, onInputChange, id]);
 
-  const textChangeHandler = text => {
-    const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  const textChangeHandler = (text: string) => {
+    const emailRegex =
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     let isValid = true;
     if (props.required && text.trim().length === 0) {
       isValid = false;
@@ -46,13 +88,13 @@ const Input = props => {
     if (props.email && !emailRegex.test(text.toLowerCase())) {
       isValid = false;
     }
-    if (props.min != null && +text < props.min) {
+    if (props.min !== null && +text < props.min) {
       isValid = false;
     }
-    if (props.max != null && +text > props.max) {
+    if (props.max !== null && +text > props.max) {
       isValid = false;
     }
-    if (props.minLength != null && text.length < props.minLength) {
+    if (props.minLength !== null && text.length < props.minLength) {
       isValid = false;
     }
     dispatch({ type: INPUT_CHANGE, value: text, isValid: isValid });
@@ -83,24 +125,24 @@ const Input = props => {
 
 const styles = StyleSheet.create({
   formControl: {
-    width: '100%'
+    width: '100%',
   },
   label: {
-    marginVertical: 8
+    marginVertical: 8,
   },
   input: {
     paddingHorizontal: 2,
     paddingVertical: 5,
     borderBottomColor: '#ccc',
-    borderBottomWidth: 1
+    borderBottomWidth: 1,
   },
   errorContainer: {
-    marginVertical: 5
+    marginVertical: 5,
   },
   errorText: {
     color: 'red',
-    fontSize: 13
-  }
+    fontSize: 13,
+  },
 });
 
 export default Input;
