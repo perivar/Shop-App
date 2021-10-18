@@ -70,6 +70,7 @@ const EditListingsScreen = (props: RootStackScreenProps<'EditListings'>) => {
       await dispatch(objectReturn);
       setIsLoading(false);
       props.navigation.popToTop();
+      // props.navigation.navigate('OwnListings');
     } catch (err: any) {
       console.log(err);
       setError(err.message);

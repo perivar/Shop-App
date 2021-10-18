@@ -1,5 +1,3 @@
-import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
-
 import Order from '../../models/order';
 import Product from '../../models/product';
 import {
@@ -12,14 +10,11 @@ import {
   setOrdersReducer,
   setProductsReducer,
 } from '../slices/products';
-import { RootState } from '../store';
+import { AppDispatch, RootState } from '../store';
 
 // action methods
 export const fetchOrders = () => {
-  return async (
-    dispatch: ThunkDispatch<RootState, never, AnyAction>,
-    getState: () => RootState
-  ) => {
+  return async (dispatch: AppDispatch, getState: () => RootState) => {
     const userId = getState().auth.userId;
     try {
       const response = await fetch(
@@ -51,10 +46,7 @@ export const fetchOrders = () => {
 };
 
 export const fetchProducts = () => {
-  return async (
-    dispatch: ThunkDispatch<RootState, never, AnyAction>,
-    getState: () => RootState
-  ) => {
+  return async (dispatch: AppDispatch, getState: () => RootState) => {
     const updatedCart = getState().allProducts.cart.map(prod => prod);
     const updatedCounter = getState().allProducts.counter.map(prod => prod);
     const updatedSumCart = getState().allProducts.sumCart;
@@ -104,19 +96,13 @@ export const fetchProducts = () => {
 };
 
 export const fetchCart = () => {
-  return async (
-    dispatch: ThunkDispatch<RootState, never, AnyAction>,
-    getState: () => RootState
-  ) => {
+  return async (dispatch: AppDispatch, getState: () => RootState) => {
     // do nothing
   };
 };
 
 export const placeOrder = (cartItems: Product[], totalAmount: number) => {
-  return async (
-    dispatch: ThunkDispatch<RootState, never, AnyAction>,
-    getState: () => RootState
-  ) => {
+  return async (dispatch: AppDispatch, getState: () => RootState) => {
     const token = getState().auth.token;
     const userId = getState().auth.userId;
     const date = new Date();
@@ -156,19 +142,13 @@ export const placeOrder = (cartItems: Product[], totalAmount: number) => {
 };
 
 export const addToCart = (productId: string) => {
-  return async (
-    dispatch: ThunkDispatch<RootState, never, AnyAction>,
-    getState: () => RootState
-  ) => {
+  return async (dispatch: AppDispatch, getState: () => RootState) => {
     dispatch(addToCartReducer({ productId: productId }));
   };
 };
 
 export const removeFromCart = (productId: string) => {
-  return async (
-    dispatch: ThunkDispatch<RootState, never, AnyAction>,
-    getState: () => RootState
-  ) => {
+  return async (dispatch: AppDispatch, getState: () => RootState) => {
     dispatch(removeFromCartReducer({ productId: productId }));
   };
 };
@@ -182,10 +162,7 @@ export const addListing = (
   seller: string,
   profilePic: string
 ) => {
-  return async (
-    dispatch: ThunkDispatch<RootState, never, AnyAction>,
-    getState: () => RootState
-  ) => {
+  return async (dispatch: AppDispatch, getState: () => RootState) => {
     const token = getState().auth.token;
     const userId = getState().auth.userId;
 
@@ -230,10 +207,7 @@ export const addListing = (
 };
 
 export const removeListing = (productId: string) => {
-  return async (
-    dispatch: ThunkDispatch<RootState, never, AnyAction>,
-    getState: () => RootState
-  ) => {
+  return async (dispatch: AppDispatch, getState: () => RootState) => {
     const token = getState().auth.token;
     const response = await fetch(
       `https://rental-app-743c0.firebaseio.com/products/${productId}.json?auth=${token}`,
@@ -259,10 +233,7 @@ export const editListing = (
   price: number,
   imgUrl: string
 ) => {
-  return async (
-    dispatch: ThunkDispatch<RootState, never, AnyAction>,
-    getState: () => RootState
-  ) => {
+  return async (dispatch: AppDispatch, getState: () => RootState) => {
     const token = getState().auth.token;
 
     const body = JSON.stringify({
