@@ -252,7 +252,6 @@ const ChatScreen = (props: RootStackScreenProps<'Chats'>) => {
           style={styles.input}
           value={messageText}
           onSubmitEditing={Keyboard.dismiss}
-          // placeHolder="Type message.."
           onChangeText={text => setMessage(text)}
         />
         <AnimatableTouchableOpacity
@@ -271,7 +270,7 @@ const ChatScreen = (props: RootStackScreenProps<'Chats'>) => {
           listRef.current.scrollToEnd({ animated: true })
         }
         onLayout={() => listRef.current.scrollToEnd({ animated: true })}
-        style={{ paddingHorizontal: 5 }}
+        style={{ paddingHorizontal: 5, top: headerHeight / 1.3 }}
         data={messageList}
         renderItem={renderRow}
         ListFooterComponent={
@@ -305,7 +304,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    // backgroundColor: '#fff',
     padding: 5,
     position: 'absolute',
     bottom: 0,

@@ -29,7 +29,6 @@ const headerY = Animated.interpolateNode(scrollY, {
 const OwnListing = (props: RootStackScreenProps<'OwnListings'>) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  // const product = useAppSelector(state => state.allProducts.products);
   const userProducts = useAppSelector(state => state.allProducts.userProducts);
 
   const renderItems: ListRenderItem<Product> = itemData => {
@@ -39,7 +38,6 @@ const OwnListing = (props: RootStackScreenProps<'OwnListings'>) => {
         price={itemData.item.price}
         img={itemData.item.url}
         description={itemData.item.description}
-        // navigation={itemData}
         onSelectProduct={() => {
           props.navigation.navigate('EditListings', {
             productId: itemData.item.id,

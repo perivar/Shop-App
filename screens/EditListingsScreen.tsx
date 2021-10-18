@@ -42,7 +42,9 @@ const EditListingsScreen = (props: RootStackScreenProps<'EditListings'>) => {
   const productToEdit = currentState.find(product => product.id === productId);
 
   const [nameHolder, setNameHolder] = useState(productToEdit.name);
-  const [priceHolder, setPriceHolder] = useState(productToEdit.price);
+  const [priceHolder, setPriceHolder] = useState<string>(
+    productToEdit.price.toString()
+  );
   const [descHolder, setDescHolder] = useState(productToEdit.description);
   const [locationHolder, setLocationHolder] = useState(productToEdit.location);
   const [imageHolder, setImageHolder] = useState(productToEdit.url);
@@ -62,12 +64,10 @@ const EditListingsScreen = (props: RootStackScreenProps<'EditListings'>) => {
         nameHolder,
         descHolder,
         locationHolder,
-        priceHolder,
+        Number(priceHolder),
         imageHolder
       );
-      console.log('------------ 2');
       await dispatch(objectReturn);
-      console.log('------------ 3');
       setIsLoading(false);
       props.navigation.popToTop();
     } catch (err: any) {
@@ -171,9 +171,9 @@ const EditListingsScreen = (props: RootStackScreenProps<'EditListings'>) => {
               <Text style={styles.inputTitle}>Price</Text>
               <TextInput
                 style={styles.input}
-                onChangeText={text => setPriceHolder(Number(text))}
+                onChangeText={text => setPriceHolder(text)}
                 selectionColor="#9a73ef"
-                value={priceHolder.toString()}
+                value={priceHolder}
                 placeholderTextColor="red"
                 textAlign="left"
               />

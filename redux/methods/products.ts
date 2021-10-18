@@ -1,3 +1,5 @@
+import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
+
 import Order from '../../models/order';
 import Product from '../../models/product';
 import {
@@ -10,12 +12,15 @@ import {
   setOrdersReducer,
   setProductsReducer,
 } from '../slices/products';
-import store, { AppDispatch } from '../store';
+import { RootState } from '../store';
 
-// methods
+// action methods
 export const fetchOrders = () => {
-  return async (dispatch: AppDispatch) => {
-    const userId = store.getState().auth.userId;
+  return async (
+    dispatch: ThunkDispatch<RootState, never, AnyAction>,
+    getState: () => RootState
+  ) => {
+    const userId = getState().auth.userId;
     try {
       const response = await fetch(
         `https://rental-app-743c0.firebaseio.com/orders/${userId}.json`
@@ -45,52 +50,16 @@ export const fetchOrders = () => {
   };
 };
 
-// export const fetchMessages = (user2: string, user: string, userImg: string) => {
-//   return async (dispatch: AppDispatch) => {
-//     try {
-//       const response = await fetch(
-//         `https://rental-app-743c0.firebaseio.com/chats/${user}/${user2}.json`
-//       );
-//       if (!response.ok) {
-//         console.log('fetching messages failed', response);
-//         throw new Error('Something went wrong');
-//       }
-
-//       const resData = await response.json();
-
-//       const loadedMessages = [];
-//       // console.log(text);
-
-//       for (const key in resData) {
-//         const text = resData[key].text;
-//         console.log(text);
-//         console.log(key);
-//       }
-//       for (let value of Object.values(resData)) {
-//         // console.log(value);
-//         const text = value.text;
-//         // const timestamp = Object.keys(resData)[0];
-//         // console.log(timestamp);
-//         //   loadedOrders.push(new Order(
-//         //     key, resData[key].cartItems, resData[key].totalAmount, new Date(resData[key].date)
-//         //   )
-//         // )
-//       }
-//     } catch (err) {
-//       throw err;
-//     }
-//   };
-// };
-
 export const fetchProducts = () => {
-  return async (dispatch: AppDispatch) => {
-    const updatedCart = store.getState().allProducts.cart.map(prod => prod);
-    const updatedCounter = store
-      .getState()
-      .allProducts.counter.map(prod => prod);
-    const updatedSumCart = store.getState().allProducts.sumCart;
+  return async (
+    dispatch: ThunkDispatch<RootState, never, AnyAction>,
+    getState: () => RootState
+  ) => {
+    const updatedCart = getState().allProducts.cart.map(prod => prod);
+    const updatedCounter = getState().allProducts.counter.map(prod => prod);
+    const updatedSumCart = getState().allProducts.sumCart;
 
-    const userId = store.getState().auth.userId;
+    const userId = getState().auth.userId;
     try {
       const response = await fetch(
         'https://rental-app-743c0.firebaseio.com/products.json'
@@ -135,15 +104,21 @@ export const fetchProducts = () => {
 };
 
 export const fetchCart = () => {
-  return async (dispatch: AppDispatch) => {
+  return async (
+    dispatch: ThunkDispatch<RootState, never, AnyAction>,
+    getState: () => RootState
+  ) => {
     // do nothing
   };
 };
 
 export const placeOrder = (cartItems: Product[], totalAmount: number) => {
-  return async (dispatch: AppDispatch) => {
-    const token = store.getState().auth.token;
-    const userId = store.getState().auth.userId;
+  return async (
+    dispatch: ThunkDispatch<RootState, never, AnyAction>,
+    getState: () => RootState
+  ) => {
+    const token = getState().auth.token;
+    const userId = getState().auth.userId;
     const date = new Date();
     const response = await fetch(
       `https://rental-app-743c0.firebaseio.com/orders/${userId}.json?auth=${token}`,
@@ -181,13 +156,19 @@ export const placeOrder = (cartItems: Product[], totalAmount: number) => {
 };
 
 export const addToCart = (productId: string) => {
-  return async (dispatch: AppDispatch) => {
+  return async (
+    dispatch: ThunkDispatch<RootState, never, AnyAction>,
+    getState: () => RootState
+  ) => {
     dispatch(addToCartReducer({ productId: productId }));
   };
 };
 
 export const removeFromCart = (productId: string) => {
-  return async (dispatch: AppDispatch) => {
+  return async (
+    dispatch: ThunkDispatch<RootState, never, AnyAction>,
+    getState: () => RootState
+  ) => {
     dispatch(removeFromCartReducer({ productId: productId }));
   };
 };
@@ -201,9 +182,12 @@ export const addListing = (
   seller: string,
   profilePic: string
 ) => {
-  return async (dispatch: AppDispatch) => {
-    const token = store.getState().auth.token;
-    const userId = store.getState().auth.userId;
+  return async (
+    dispatch: ThunkDispatch<RootState, never, AnyAction>,
+    getState: () => RootState
+  ) => {
+    const token = getState().auth.token;
+    const userId = getState().auth.userId;
 
     const body = JSON.stringify({
       description,
@@ -246,8 +230,11 @@ export const addListing = (
 };
 
 export const removeListing = (productId: string) => {
-  return async (dispatch: AppDispatch) => {
-    const token = store.getState().auth.token;
+  return async (
+    dispatch: ThunkDispatch<RootState, never, AnyAction>,
+    getState: () => RootState
+  ) => {
+    const token = getState().auth.token;
     const response = await fetch(
       `https://rental-app-743c0.firebaseio.com/products/${productId}.json?auth=${token}`,
       {
@@ -272,8 +259,11 @@ export const editListing = (
   price: number,
   imgUrl: string
 ) => {
-  return async (dispatch: AppDispatch) => {
-    const token = store.getState().auth.token;
+  return async (
+    dispatch: ThunkDispatch<RootState, never, AnyAction>,
+    getState: () => RootState
+  ) => {
+    const token = getState().auth.token;
 
     const body = JSON.stringify({
       name,

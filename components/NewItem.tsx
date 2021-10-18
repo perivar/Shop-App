@@ -121,7 +121,7 @@ const NewItem = (props: RootStackScreenProps<'Form'>) => {
   };
 
   const [nameHolder, setNameHolder] = useState('Add your Title');
-  const [priceHolder, setPriceHolder] = useState(null);
+  const [priceHolder, setPriceHolder] = useState<string>();
   const [descHolder, setDescHolder] = useState('Add your Description');
   // const [locationHolder, setLocationHolder] = useState("Add your Location")
 
@@ -130,7 +130,7 @@ const NewItem = (props: RootStackScreenProps<'Form'>) => {
     let objectReturn = await addListing(
       nameHolder,
       descHolder,
-      priceHolder,
+      Number(priceHolder),
       image,
       selectedLocation,
       username,
