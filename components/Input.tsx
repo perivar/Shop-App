@@ -43,7 +43,7 @@ const inputReducer = (state: State, action: Action) => {
 };
 
 const Input: React.FC<{
-  id?: string;
+  id: string;
   label?: string;
   initialValue?: string;
   value?: string;
@@ -60,8 +60,7 @@ const Input: React.FC<{
   max?: number;
   minLength?: number;
   placeholder?: string;
-  onInputChange?: (id: string, value: string, isValid: boolean) => void;
-  onChangeText?: (text: string) => void;
+  onInputChange: (id: string, value: string, isValid: boolean) => void;
 }> = props => {
   const initialState: State = {
     value: props.initialValue ? props.initialValue : '',

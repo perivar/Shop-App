@@ -104,6 +104,14 @@ const AuthScreen = (props: RootStackScreenProps<'Auth'>) => {
 
   const inputChangeHandler = useCallback(
     (inputIdentifier, inputValue, inputValidity) => {
+      console.log(
+        'authscreen id: ' +
+          inputIdentifier +
+          ' ' +
+          inputValue +
+          ' ' +
+          inputValidity
+      );
       dispatchFormState({
         type: FORM_INPUT_UPDATE,
         value: inputValue,

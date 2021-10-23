@@ -1,8 +1,7 @@
 import { MaterialIcons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
-import firebase from 'firebase';
 import React, { useEffect, useState } from 'react';
-import { AsyncStorage } from 'react-native';
 import {
   ActivityIndicator,
   Dimensions,
@@ -13,6 +12,7 @@ import {
   View,
 } from 'react-native';
 
+import firebase from '../firebase';
 import { RootStackScreenProps } from '../navigation/ShopNavigation';
 import { logout } from '../redux/slices/auth';
 import { useAppDispatch } from '../redux/store/hooks';

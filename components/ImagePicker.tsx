@@ -2,7 +2,6 @@ import { Camera } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import { ImageInfo } from 'expo-image-picker/build/ImagePicker.types';
 import { LinearGradient } from 'expo-linear-gradient';
-import firebase from 'firebase';
 import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
@@ -12,6 +11,7 @@ import {
   View,
 } from 'react-native';
 
+import firebase from '../firebase';
 import { RootStackScreenProps } from '../navigation/ShopNavigation';
 
 const { width, height } = Dimensions.get('window');

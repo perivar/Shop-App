@@ -24,9 +24,20 @@ const { width, height } = Dimensions.get('window');
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
 
+type InputValues = {
+  email: string;
+  password: string;
+};
+
+type InputValidities = {
+  email: boolean;
+  password: boolean;
+  [key: string]: boolean;
+};
+
 type State = {
-  inputValues: any;
-  inputValidities: any;
+  inputValues: InputValues;
+  inputValidities: InputValidities;
 };
 
 type Action = {
@@ -61,7 +72,7 @@ const formReducer = (state: State, action: Action) => {
 
 const LogInScreen = (props: RootStackScreenProps<'Login'>) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState();
+  const [error, setError] = useState<string>();
 
   const dispatch = useAppDispatch();
 
@@ -103,6 +114,15 @@ const LogInScreen = (props: RootStackScreenProps<'Login'>) => {
 
   const inputChangeHandler = useCallback(
     (inputIdentifier, inputValue, inputValidity) => {
+      console.log(
+        'loginscreen id: ' +
+          inputIdentifier +
+          ' ' +
+          inputValue +
+          ' ' +
+          inputValidity
+      );
+
       dispatchFormState({
         type: FORM_INPUT_UPDATE,
         value: inputValue,

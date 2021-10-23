@@ -1,5 +1,4 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import firebase from 'firebase';
 import React, { useEffect, useState } from 'react';
 import {
   Dimensions,
@@ -14,6 +13,7 @@ import * as Animatable from 'react-native-animatable';
 import Animated from 'react-native-reanimated';
 
 import ChatItem from '../components/ChatItem';
+import firebase from '../firebase';
 import { RootStackScreenProps } from '../navigation/ShopNavigation';
 
 const { width, height } = Dimensions.get('window');

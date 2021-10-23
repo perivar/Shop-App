@@ -1,7 +1,7 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import firebase from 'firebase';
-import { AsyncStorage } from 'react-native';
 
+import firebase from '../../firebase';
 import { AppDispatch, RootState } from '../store';
 
 export interface AuthState {

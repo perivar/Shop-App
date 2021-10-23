@@ -1,5 +1,4 @@
 import { MaterialIcons } from '@expo/vector-icons';
-import firebase from 'firebase';
 import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
@@ -17,6 +16,7 @@ import {
 import * as Animatable from 'react-native-animatable';
 import GestureRecognizer from 'react-native-swipe-gestures';
 
+import firebase from '../firebase';
 import { RootStackScreenProps } from '../navigation/ShopNavigation';
 import { addListing } from '../redux/methods/products';
 import { useAppDispatch, useAppSelector } from '../redux/store/hooks';

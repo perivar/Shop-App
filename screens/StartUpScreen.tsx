@@ -1,5 +1,6 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect } from 'react';
-import { ActivityIndicator, AsyncStorage, View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 
 import { RootStackScreenProps } from '../navigation/ShopNavigation';
 import { authenticate } from '../redux/slices/auth';

@@ -1,5 +1,4 @@
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
-import firebase from 'firebase';
 import React, { useEffect, useRef, useState } from 'react';
 import {
   Animated,
@@ -18,6 +17,7 @@ import {
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 
+import firebase from '../firebase';
 import { RootStackScreenProps } from '../navigation/ShopNavigation';
 
 interface Message {

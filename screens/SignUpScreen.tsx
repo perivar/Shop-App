@@ -2,7 +2,6 @@ import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { ImageInfo } from 'expo-image-picker/build/ImagePicker.types';
 import { LinearGradient } from 'expo-linear-gradient';
-import firebase from 'firebase';
 import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import {
   ActivityIndicator,
@@ -21,6 +20,7 @@ import * as Animatable from 'react-native-animatable';
 
 import Input from '../components/Input';
 import UserPermissions from '../components/UserPermissions';
+import firebase from '../firebase';
 import { RootStackScreenProps } from '../navigation/ShopNavigation';
 import { signup } from '../redux/slices/auth';
 import { useAppDispatch } from '../redux/store/hooks';
@@ -29,9 +29,21 @@ const { width, height } = Dimensions.get('window');
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
 
+type InputValues = {
+  email: string;
+  password: string;
+  name: string;
+};
+
+type InputValidities = {
+  email: boolean;
+  password: boolean;
+  [key: string]: boolean;
+};
+
 type State = {
-  inputValues: any;
-  inputValidities: any;
+  inputValues: InputValues;
+  inputValidities: InputValidities;
 };
 
 type Action = {
@@ -66,8 +78,8 @@ const formReducer = (state: State, action: Action) => {
 
 const SignUpScreen = (props: RootStackScreenProps<'SignUp'>) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState();
-  const [value, onChangeText] = useState(null);
+  const [error, setError] = useState<string>();
+  const [value, setValue] = useState<string>();
   const [passCheck, setPassCheck] = useState(false);
   const [avatar, setAvatar] = useState('baafal');
   const [uploadedImage, setUploadedImage] = useState('fill');
@@ -152,6 +164,10 @@ const SignUpScreen = (props: RootStackScreenProps<'SignUp'>) => {
   };
 
   useEffect(() => {
+    console.log(
+      'formState.inputValues.password: ' + formState.inputValues.password
+    );
+    console.log('value: ' + value);
     if (value === formState.inputValues.password) {
       setPassCheck(true);
     }
@@ -289,7 +305,7 @@ const SignUpScreen = (props: RootStackScreenProps<'SignUp'>) => {
                   required
                   minLength={5}
                   autoCapitalize="none"
-                  errorText="plase enter valid password"
+                  errorText="please enter valid password"
                   onInputChange={inputChangeHandler}
                   initialValue=""
                 />
@@ -311,6 +327,7 @@ const SignUpScreen = (props: RootStackScreenProps<'SignUp'>) => {
                   />
                 </View>
                 <Input
+                  id="confirmPassword"
                   placeholder="Confirm Password"
                   keyboardType="default"
                   secureTextEntry
@@ -318,7 +335,13 @@ const SignUpScreen = (props: RootStackScreenProps<'SignUp'>) => {
                   minLength={5}
                   autoCapitalize="none"
                   errorText="please enter valid password"
-                  onChangeText={password => onChangeText(password)}
+                  onInputChange={(
+                    inputIdentifier,
+                    inputValue,
+                    inputValidity
+                  ) => {
+                    setValue(inputValue);
+                  }}
                   value={value}
                   style={styles.input}
                 />
